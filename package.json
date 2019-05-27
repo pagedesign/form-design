@@ -1,34 +1,59 @@
 {
-    "name": "form-design",
-    "version": "1.0.0",
-    "description": "表单设计器",
-    "main": "index.js",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "packez start ./src/index.js -w -c",
-        "build": "packez build ./src/index.js -c",
-        "server": "packez server ./src/index.js -c",
-        "analyzer": "packez analyzer ./src/index.js -c"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/pagedesign/form-design.git"
-    },
-    "keywords": [],
-    "author": "nobo.zhou@foxmail.com",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/pagedesign/form-design/issues"
-    },
-    "homepage": "https://github.com/pagedesign/form-design#readme",
-    "dependencies": {
-        "classnames": "^2.2.6",
-        "prop-types": "^15.7.2",
-        "react": "^16.8.6",
-        "react-dom": "^16.8.6"
-    },
-    "devDependencies": {
-        "packez": "^2.0.4",
-        "transform-es": "^2.3.0"
-    }
+  "name": "form-design",
+  "version": "1.0.0",
+  "description": "表单设计器",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node scripts/start",
+    "build": "node scripts/build",
+    "server": "node scripts/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pagedesign/form-design.git"
+  },
+  "keywords": [],
+  "author": "nobo.zhou@foxmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pagedesign/form-design/issues"
+  },
+  "homepage": "https://github.com/pagedesign/form-design#readme",
+  "dependencies": {
+    "babel-plugin-import": "^1.11.2",
+    "classnames": "^2.2.6",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dnd": "^7.4.5",
+    "react-dnd-html5-backend": "^7.4.4",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.3",
+    "redux": "^4.0.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.6",
+    "babel-preset-packez": "^0.2.0",
+    "css-loader": "^2.1.1",
+    "eslint": "^5.16.0",
+    "eslint-config-packez": "^0.3.0",
+    "eslint-loader": "^2.1.2",
+    "json5-loader": "^2.0.0",
+    "mini-css-extract-plugin": "^0.6.0",
+    "node-sass": "^4.12.0",
+    "packez": "^2.0.4",
+    "postcss-flexbugs-fixes": "^4.1.0",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.6.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "transform-es": "^2.3.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

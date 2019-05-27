@@ -1,0 +1,34 @@
+{
+    "name": "form-design",
+    "version": "1.0.0",
+    "description": "表单设计器",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "packez start ./src/index.js -w -c",
+        "build": "packez build ./src/index.js -c",
+        "server": "packez server ./src/index.js -c",
+        "analyzer": "packez analyzer ./src/index.js -c"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pagedesign/form-design.git"
+    },
+    "keywords": [],
+    "author": "nobo.zhou@foxmail.com",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/pagedesign/form-design/issues"
+    },
+    "homepage": "https://github.com/pagedesign/form-design#readme",
+    "dependencies": {
+        "classnames": "^2.2.6",
+        "prop-types": "^15.7.2",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6"
+    },
+    "devDependencies": {
+        "packez": "^2.0.4",
+        "transform-es": "^2.3.0"
+    }
+}

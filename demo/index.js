@@ -12,7 +12,7 @@ function App() {
             margin: "30px auto",
             border: '1px solid #ececec',
             width: 1400,
-            height: 500
+            minHeight: 500
         }}>
             <FormDesign />
         </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import DropContainer from './DropContainer';
 
 export default class DesignPanel extends React.Component {
 
@@ -6,7 +7,7 @@ export default class DesignPanel extends React.Component {
 
         return (
             <div className="design-panel">
-
+                <DropContainer />
             </div>
         );
     }

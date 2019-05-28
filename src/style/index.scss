@@ -7,7 +7,11 @@
     height: 100%;
     display: flex;
 
-    background: url(images/bg.png) repeat;
+    box-sizing: border-box;
+
+    * {
+        box-sizing: border-box;
+    }
 
     .widgets-panel {
         padding: 10px;
@@ -29,6 +33,47 @@
         flex: 1;
         overflow: auto;
         padding: 10px 0;
+
+        .design-layout-container {
+            width: 350px;
+            height: 600px;
+            padding-bottom: 60px;
+            margin: 0 auto;
+            overflow: auto;
+            background: url(images/bg.png) repeat;
+            border: 1px solid #ccc;
+
+            // &.dropable {
+            //     border: 1px dashed #81bb80;
+            // }
+
+            .drag-item-placeholder {
+                padding-top: 15px;
+
+                &-inner {
+                    height: 45px;
+                    border: 1px dashed #5B6B73;
+                }
+            }
+
+            .widget-preview-item {
+                padding-top: 15px;
+
+                &-inner {
+                    height: 45px;
+                    border: 1px solid #5B6B73;
+                    text-align: center;
+                    line-height: 45px;
+                }
+
+                .drag-item-placeholder:first-child {
+                    padding-top: 0;
+                    margin-bottom: 15px;
+                }
+
+            }
+
+        }
     }
 
     .property-panel {

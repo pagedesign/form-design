@@ -30,12 +30,7 @@ const spec = {
         // const cid = props.data.id;
         const designer = component.context;
         //console.log(monitor.getItem())
-        designer.addItem({
-            fieldId: uuid(),
-            xtype: widget.xtype,
-            title: widget.text,
-            placeholder: "请输入"
-        })
+        designer.addItem(widget.props)
     }
 };
 

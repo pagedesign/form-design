@@ -1,6 +1,7 @@
 import WidgetItem from './WidgetItem';
 import WidgetPreviewItem from './WidgetPreviewItem';
 import WidgetPlaceholderItem from './WidgetPlaceholderItem';
+import isWidget from './isWidget'
 
 import widgets from './components';
 
@@ -9,4 +10,5 @@ export {
     WidgetItem,
     WidgetPreviewItem,
     WidgetPlaceholderItem,
+    isWidget,
 }

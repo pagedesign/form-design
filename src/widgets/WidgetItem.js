@@ -8,7 +8,7 @@ import Types from '../common/WidgetTypes';
 
 const spec = {
     beginDrag(props) {
-        return props.widget;
+        return Object.assign({_isNew: true},props.widget);
     },
     // endDrag(props, monitor, component) {
     //     console.log('endDrag')

@@ -10,6 +10,7 @@ import DefaultPreview from './components/common/Preview'
 import Types from '../common/WidgetTypes';
 import WidgetPlaceholderItem from './WidgetPlaceholderItem';
 import LayoutContext from '../LayoutContext';
+import {isWidget} from './isWidget';
 // import { uuid } from '../utils';
 /* global $ */
 const dragSpec = {
@@ -41,6 +42,7 @@ const dropSpec = {
     hover(props, monitor, component) {
         console.log('drag item over')
         const { placeholderPosition } = component.state;
+        const {item} = props;
 
         const dragItem = monitor.getItem();
         const dragOffset = monitor.getClientOffset();
@@ -50,7 +52,8 @@ const dropSpec = {
         const middleY = targetOffset.bottom - (targetOffset.height / 2);
 
         let pos = 'none';
-
+        
+        
         if (dragOffset.y <= middleY) {
             pos = 'top';
         } else {
@@ -58,59 +61,27 @@ const dropSpec = {
         }
 
         if (placeholderPosition !== pos) {
+            dragItem._dropTarget = {
+                id: item.fieldId,
+                pos,
+            }
+
             component.setState({
                 placeholderPosition: pos
             });
         }
 
-        // console.log(dragOffset)
-
-        // return;
-
-        // const dropItem = props.data;
-        // //console.log(dragItem)
-        // if (dragItem.id === dropItem.id) {
-        //     return;
-        // }
-
-
-
-        // // const middleY = targetOffset.left + targetOffset.width / 2;
-        // // const middleX = targetOffset.left + targetOffset.width / 2;
-
-        // const offset = {
-        //     left: targetOffset.left - 5,
-        //     top: targetOffset.top + window.pageYOffset,
-        // }
-
-        // if (dragOffset.x < middleY) {
-        //     //   console.log('left');
-        // } else {
-        //     offset.left = targetOffset.left + targetOffset.width - 5;
-        //     console.log('right')
-        // }
-
-        // $(poninter).offset(offset);
-
-        // $(poninter).css({
-        //     height: dropDOM.offsetHeight
-        // })
-        // // console.log('hover', monitor.getClientOffset())
     },
     drop(props, monitor, component) {
-        // return;
-        // const cid = props.data.id;
         const designer = component.context;
-        // console('drag???')
-        designer.addItem({});
-        //console.log(monitor.getItem())
-        // layout.addLayoutChildren(cid, {
-        //     uuid: uuid(),
-        //     widget: monitor.getItem(),
-        // })
-        // return {
-        //     ...props
-        // };
+        let dragItem = monitor.getItem();
+
+        if( isWidget(dragItem) ) {
+dragItem = dragItem.props;
+ designer.addItem(dragItem);
+        } else {
+            console.log('move')
+        }
     }
 };
 

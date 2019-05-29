@@ -10,7 +10,7 @@ import DefaultPreview from './components/common/Preview'
 import Types from '../common/WidgetTypes';
 import WidgetPlaceholderItem from './WidgetPlaceholderItem';
 import LayoutContext from '../LayoutContext';
-import {isWidget} from './isWidget';
+import isWidget from './isWidget';
 // import { uuid } from '../utils';
 /* global $ */
 const dragSpec = {
@@ -42,7 +42,7 @@ const dropSpec = {
     hover(props, monitor, component) {
         console.log('drag item over')
         const { placeholderPosition } = component.state;
-        const {item} = props;
+        const { item } = props;
 
         const dragItem = monitor.getItem();
         const dragOffset = monitor.getClientOffset();
@@ -52,8 +52,8 @@ const dropSpec = {
         const middleY = targetOffset.bottom - (targetOffset.height / 2);
 
         let pos = 'none';
-        
-        
+
+
         if (dragOffset.y <= middleY) {
             pos = 'top';
         } else {
@@ -76,11 +76,12 @@ const dropSpec = {
         const designer = component.context;
         let dragItem = monitor.getItem();
 
-        if( isWidget(dragItem) ) {
-dragItem = dragItem.props;
- designer.addItem(dragItem);
+        if (isWidget(dragItem)) {
+            dragItem = dragItem.props;
+            designer.addItem(dragItem);
+            console.log('move1')
         } else {
-            console.log('move')
+            console.log('move2')
         }
     }
 };

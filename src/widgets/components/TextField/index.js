@@ -7,12 +7,13 @@ const XTYPE = 'EX_TEXT_FIELD';
 const TEXT = '文本';
 
 export default {
+    $$widget: true,
     xtype: XTYPE,
     text: "文本",
     icon: icon,
     PropertyPanel,
     Preview,
-     get props(){
+    get props() {
         return {
             ...getDefaultProps(),
             xtype: XTYPE,

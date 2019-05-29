@@ -8,7 +8,7 @@ import Types from '../common/WidgetTypes';
 
 const spec = {
     beginDrag(props) {
-        return Object.assign({_isNew: true},props.widget);
+        return Object.assign({ _isNew: true }, props.widget);
     },
     // endDrag(props, monitor, component) {
     //     console.log('endDrag')
@@ -29,7 +29,7 @@ class WidgetItem extends React.Component {
 
     render() {
         const { disabled, widget, connectDragSource, isDragging } = this.props;
-        const { cmpid, text = "未知组件", icon } = widget;
+        const { cmpid, title = "未知组件", icon } = widget;
         return connectDragSource(
             <div className={cx({
                 "widget-item": true,
@@ -37,7 +37,7 @@ class WidgetItem extends React.Component {
             })}>
                 <div className="widget-item-title">
                     <img src={icon} />
-                    <span className="widget-text">{text}</span>
+                    <span className="widget-text">{title}</span>
                 </div>
             </div>
         );

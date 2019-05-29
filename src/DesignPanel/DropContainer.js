@@ -5,7 +5,7 @@ import {
 } from 'react-dnd';
 import cx from 'classnames';
 import Types from '../common/WidgetTypes';
-// import { uuid } from '../utils';
+import { uuid } from '../utils';
 import {
     WidgetPreviewItem,
     WidgetPlaceholderItem
@@ -13,26 +13,28 @@ import {
 import LayoutContext from '../LayoutContext';
 
 const spec = {
-    canDrop(props, monitor) {
-        //  console.log(props)
-        //console.log('canDrop')
-        return true;
-    },
-    hover() {
-        console.log('hoverDrop')
-    },
+    // canDrop(props, monitor) {
+    //     return true;
+    // },
+    // hover() {
+    //     console.log('hoverDrop')
+    // },
     drop(props, monitor, component) {
-        console.log('drop')
+        // console.log('drop')
         if (monitor.didDrop()) {
             console.log('has did drop')
             return;
         }
-        console.log(111)
+        const widget = monitor.getItem();
+        // console.log(111)
         // const cid = props.data.id;
         const designer = component.context;
         //console.log(monitor.getItem())
         designer.addItem({
-
+            fieldId: uuid(),
+            xtype: widget.xtype,
+            title: widget.text,
+            placeholder: "请输入"
         })
     }
 };
@@ -68,7 +70,7 @@ class DropContainer extends React.Component {
             })}>
                 {
                     items.map((item, i) => {
-                        return <WidgetPreviewItem key={i} />
+                        return <WidgetPreviewItem item={item} key={i} />
                     })
                 }
                 {

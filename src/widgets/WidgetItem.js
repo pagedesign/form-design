@@ -8,15 +8,14 @@ import Types from '../common/WidgetTypes';
 
 const spec = {
     beginDrag(props) {
-        console.log('beginDrag')
-        return props.data;
+        return props.widget;
     },
-    endDrag(props, monitor, component) {
-        console.log('endDrag')
-    },
-    canDrag(props) {
-        return !props.disabled;
-    }
+    // endDrag(props, monitor, component) {
+    //     console.log('endDrag')
+    // },
+    // canDrag(props) {
+    //     return !props.disabled;
+    // }
 };
 
 const collect = (connect, monitor) => {
@@ -29,18 +28,16 @@ const collect = (connect, monitor) => {
 class WidgetItem extends React.Component {
 
     render() {
-        const { disabled, data, connectDragSource, isDragging } = this.props;
-        const { cmpid, title = "未知组件" } = data;
+        const { disabled, widget, connectDragSource, isDragging } = this.props;
+        const { cmpid, text = "未知组件", icon } = widget;
         return connectDragSource(
             <div className={cx({
                 "widget-item": true,
                 "widget-item-disabled": disabled,
             })}>
-                {/* <div className="widget-item-icon">
-                    <Icon type="pie-chart" theme="filled" />
-                </div> */}
                 <div className="widget-item-title">
-                    {title}
+                    <img src={icon} />
+                    <span className="widget-text">{text}</span>
                 </div>
             </div>
         );

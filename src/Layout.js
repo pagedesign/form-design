@@ -4,17 +4,18 @@ import PropertyPanel from './PropertyPanel';
 import DesignPanel from './DesignPanel';
 import LayoutContext from './LayoutContext';
 
-React.getD
-
 export default class Layout extends React.Component {
 
     state = {
-        items: this.props.items || []
+        items: props.defaultItems || []
     }
 
-    // static getDerivedStateFromProps(props, state){
+    static getDerivedStateFromProps(props, state) {
 
-    // }
+        return {
+            items: props.items || state.items
+        }
+    }
 
     addItem(item) {
         const { items } = this.state;
@@ -24,6 +25,35 @@ export default class Layout extends React.Component {
                 item
             ]
         })
+    }
+
+    removeItem(fieldId) {
+        const { items } = this.state;
+        const ret = items.filter(item => item.fieldId !== fieldId);
+
+        this.setState({
+            items: ret
+        });
+    }
+
+    getItem() {
+
+    }
+
+    getItemIndex() {
+
+    }
+
+    insertBefore(fieldId) {
+
+    }
+
+    insertAfter(fieldId) {
+
+    }
+
+    append(item) {
+        this.items.push(item)
     }
 
     getContext() {

@@ -10,7 +10,6 @@ function App() {
     return (
         <div style={{
             margin: "30px auto",
-            border: '1px solid #ececec',
             width: 1400,
             minHeight: 500
         }}>

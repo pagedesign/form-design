@@ -6,9 +6,10 @@ import {
     DropTarget,
 } from 'react-dnd';
 import cx from 'classnames';
+import DefaultPreview from './components/common/Preview'
 import Types from '../common/WidgetTypes';
 import WidgetPlaceholderItem from './WidgetPlaceholderItem';
-import LayoutContext from '../LayoutContext'
+import LayoutContext from '../LayoutContext';
 // import { uuid } from '../utils';
 /* global $ */
 const dragSpec = {
@@ -130,7 +131,7 @@ class WidgetPreviewItem extends React.Component {
     }
 
     render() {
-        const { connectDropTarget, connectDragSource, isDragging, isOver, canDrop, data } = this.props;
+        const { connectDropTarget, connectDragSource, isDragging, isOver, canDrop, item } = this.props;
         const { placeholderPosition } = this.state;
         // const layout = this.context;
         // const items = layout.getLayoutChildren(data.id);
@@ -138,13 +139,13 @@ class WidgetPreviewItem extends React.Component {
 
         return connectDropTarget(
             <div ref={connectDragSource} className={cx({
-                "widget-preview-item": true,
+                "widget-preview-item-wrapper": true,
                 "droppable": isOver,
                 // "drop-tips": canDrop,
             })}>
                 {placeholderPosition === 'top' && isOver ? <WidgetPlaceholderItem /> : null}
-                <div className="widget-preview-item-inner">
-                    NOBO-TEST
+                <div className="widget-preview-item">
+                    <DefaultPreview {...item} />
                 </div>
                 {placeholderPosition === 'bottom' && isOver ? <WidgetPlaceholderItem /> : null}
             </div>

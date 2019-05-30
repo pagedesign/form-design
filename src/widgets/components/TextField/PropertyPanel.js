@@ -4,7 +4,7 @@ import {
     FormItem,
     NativeField,
 } from '../../../components/Form';
-import '../../../components/Form/style';
+import '../../../components/Form/style/index.scss';
 
 export default function ({ data, onChange }) {
 
@@ -16,6 +16,7 @@ export default function ({ data, onChange }) {
         <Form
             onChange={onFormChange}
             formValue={data}
+            labelWidth={60}
         >
             <FormItem
                 label="字段名称"

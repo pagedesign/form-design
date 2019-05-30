@@ -13,7 +13,7 @@ function App() {
             width: 1400,
             minHeight: 500
         }}>
-            <FormDesign />
+            <FormDesign onChange={console.log} />
         </div>
     );
 }

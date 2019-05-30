@@ -1,0 +1,112 @@
+@import "_mixins";
+@import "_var";
+
+.#{$form-item-prefix-cls} {
+    margin-bottom: 24px;
+    // vertical-align: top;
+    // @include clearfix();
+
+    &-label {
+        text-align: left;
+        // vertical-align: middle;
+        // float: left;
+        font-size: $font-size-small;
+        color: $text-color;
+        // line-height: 1;
+        padding: 10px 12px 10px 0;
+        box-sizing: border-box;
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    &-content {
+        position: relative;
+        font-size: $font-size-small;
+    }
+
+    &-position-top {
+        display: block;
+    }
+
+    &-position-top &-label {
+        padding: 0 0 10px 0;
+    }
+
+    &-position-left,
+    &-position-right {
+        display: flex;
+        align-items: center;
+        .#{$form-item-prefix-cls}-label {
+            padding: 0 10px 0 0;
+        }
+        .#{$form-item-prefix-cls}-content {
+            flex: 1;
+        }
+    }
+
+    &-position-left.#{$form-item-prefix-cls}-align-items-top,
+    &-position-right.#{$form-item-prefix-cls}-align-items-top {
+        align-items: flex-start;
+    }
+
+    &-position-left.#{$form-item-prefix-cls}-align-items-bottom,
+    &-position-right.#{$form-item-prefix-cls}-align-items-bottom {
+        align-items: flex-end;
+    }
+
+    &-position-left &-label {
+        text-align: left;
+    }
+    &-position-right &-label {
+        text-align: right;
+    }
+
+    &-inline {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    &-position-left.#{$form-item-prefix-cls}-inline,
+    &-position-right.#{$form-item-prefix-cls}-inline {
+        display: inline-flex;
+    }
+
+    & & {
+        margin-bottom: 0;
+    }
+    & & &-content {
+        margin-left: 0 !important;
+    }
+
+    &-help,
+    &-error-tip {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        line-height: 1;
+        padding-top: 5px;
+    }
+
+    &-error-tip {
+        color: $error-color;
+    }
+
+    &-required {
+        .#{$form-item-prefix-cls}-label:before {
+            content: "*";
+            display: inline-block;
+            margin-right: 4px;
+            line-height: 1;
+            font-family: SimSun;
+            font-size: $font-size-small;
+            color: $error-color;
+        }
+    }
+    &-error &-help {
+        color: $error-color;
+    }
+
+    &-error {
+        // todo
+    }
+}

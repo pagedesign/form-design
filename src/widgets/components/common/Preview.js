@@ -2,7 +2,6 @@ import React from 'react';
 import classNames from 'classnames';
 
 export default function (props) {
-
     const classString = classNames({
         'widget-preview-item-inner': true,
         [props.className]: props.className
@@ -12,9 +11,9 @@ export default function (props) {
         <div
             className={classString}
         >
-            <label className="widget-preview-title">{props.title} </label>
+            <label className="widget-preview-title">{props.title}</label>
             <span className="widget-preview-input">{props.placeholder}</span>
-            <span className="widget-preview-close">x</span>
+            {/* <span className="widget-preview-close" onClick={onRemove}>x</span> */}
         </div>
     )
 }

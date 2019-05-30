@@ -8,17 +8,19 @@ import Types from '../common/WidgetTypes';
 import { uuid } from '../utils';
 import {
     WidgetPreviewItem,
-    WidgetPlaceholderItem
+    WidgetPlaceholderItem,
+    isWidget
 } from '../widgets';
 import LayoutContext from '../LayoutContext';
 
 const spec = {
-    // canDrop(props, monitor) {
-    //     return true;
-    // },
-    // hover() {
-    //     console.log('hoverDrop')
-    // },
+    canDrop(props, monitor) {
+        const item = monitor.getItem();
+        return isWidget(item);
+    },
+    hover() {
+        console.log('container over...')
+    },
     drop(props, monitor, component) {
         // console.log('drop')
         if (monitor.didDrop()) {
@@ -39,6 +41,7 @@ const collect = (connect, monitor) => {
         connectDropTarget: connect.dropTarget(),
         isOver: monitor.isOver({ shallow: true }),
         canDrop: monitor.canDrop(),
+        dragItem: monitor.getItem(),
     }
 }
 
@@ -53,7 +56,7 @@ class DropContainer extends React.Component {
     }
 
     render() {
-        const { connectDropTarget, isOver, canDrop } = this.props;
+        const { connectDropTarget, isOver, canDrop, dragItem } = this.props;
         const designer = this.context;
         const items = designer.getItems();
         console.log('dp c')
@@ -65,11 +68,11 @@ class DropContainer extends React.Component {
             })}>
                 {
                     items.map((item, i) => {
-                        return <WidgetPreviewItem item={item} key={i} />
+                        return <WidgetPreviewItem item={item} key={item.fieldId} />
                     })
                 }
                 {
-                    isOver ? this.rendrePlaceholder() : null
+                    isOver && isWidget(dragItem) ? this.rendrePlaceholder() : null
                 }
             </div>
         );

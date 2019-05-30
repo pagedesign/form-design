@@ -1,0 +1,20 @@
+@import "_mixins";
+@import "_var";
+
+.#{$form-prefix-cls} {
+    &-label-left .#{$form-item-prefix-cls}-label {
+        text-align: left;
+    }
+    &-label-top .#{$form-item-prefix-cls}-label {
+        float: none;
+        display: inline-block;
+        padding: 0 0 10px 0;
+    }
+    &-inline {
+        .#{$form-item-prefix-cls} {
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: top;
+        }
+    }
+}

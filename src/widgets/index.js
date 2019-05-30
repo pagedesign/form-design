@@ -1,7 +1,8 @@
 import WidgetItem from './WidgetItem';
 import WidgetPreviewItem from './WidgetPreviewItem';
 import WidgetPlaceholderItem from './WidgetPlaceholderItem';
-import isWidget from './isWidget'
+import isWidget from './isWidget';
+import getWidgetPropertyPanel from './getWidgetPropertyPanel';
 
 import widgets from './components';
 
@@ -11,4 +12,5 @@ export {
     WidgetPreviewItem,
     WidgetPlaceholderItem,
     isWidget,
+    getWidgetPropertyPanel,
 }

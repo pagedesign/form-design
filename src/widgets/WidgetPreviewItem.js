@@ -1,6 +1,7 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import flow from 'lodash/flow';
+import get from 'lodash/get';
 import {
     DragSource,
     DropTarget,
@@ -16,7 +17,8 @@ import isWidget from './isWidget';
 const dragSpec = {
     beginDrag(props) {
         console.log('beginDrag, xx')
-        console.log(props)
+        console.log(props.item)
+        return props.item;
         //  return props.data;
     },
     endDrag(props, monitor, component) {
@@ -28,60 +30,107 @@ const dragSpec = {
 const dragCollect = (connect, monitor) => {
     return {
         connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging,
+        isDragging: monitor.isDragging(),
     };
 }
 
 const dropSpec = {
 
     canDrop(props, monitor, component) {
-        //  console.log(props)
-        // console.log('canDrop')
-        return true;
-    },
-    hover(props, monitor, component) {
-        console.log('drag item over')
-        const { placeholderPosition } = component.state;
-        const { item } = props;
+        const item = monitor.getItem();
 
+        if (isWidget(item)) return true;
+
+        return props.item.fieldId !== item.fieldId;
+
+    },
+
+    hover(props, monitor, component) {
+        const { placeholderPosition } = component.state;
+        const designer = component.context;
+        const { item } = props;
         const dragItem = monitor.getItem();
+        let isSortMode = false;
+
+        if (!isWidget(dragItem)) {
+            isSortMode = true;
+        }
+
         const dragOffset = monitor.getClientOffset();
         const previewDOM = findDOMNode(component);
-        const targetOffset = previewDOM.getBoundingClientRect();
 
-        const middleY = targetOffset.bottom - (targetOffset.height / 2);
-
-        let pos = 'none';
-
-
-        if (dragOffset.y <= middleY) {
-            pos = 'top';
-        } else {
-            pos = 'bottom';
-        }
-
-        if (placeholderPosition !== pos) {
-            dragItem._dropTarget = {
-                id: item.fieldId,
-                pos,
+        if (isSortMode) {
+            //顺序调整模式
+            if (item.fieldId === dragItem.fieldId) {
+                return;
+            } else {
+                const targetOffset = previewDOM.querySelector('.widget-preview-item').getBoundingClientRect();
+                const middleY = targetOffset.bottom - (targetOffset.height / 2);
+                if (dragOffset.y <= middleY) {
+                    console.log('top')
+                    designer.insertBefore(dragItem, item.fieldId);
+                } else {
+                    designer.insertAfter(dragItem, item.fieldId);
+                    console.log('bottom')
+                }
+                console.log('can sort', middleY)
             }
 
-            component.setState({
-                placeholderPosition: pos
-            });
+        } else {
+            //新增模式
+            const targetOffset = previewDOM.getBoundingClientRect();
+            const middleY = targetOffset.bottom - (targetOffset.height / 2);
+
+            let pos = 'none';
+
+            if (dragOffset.y <= middleY) {
+                pos = 'top';
+            } else {
+                pos = 'bottom';
+            }
+            //设置放置位置
+            if (placeholderPosition !== pos) {
+                dragItem._dropTarget = {
+                    id: item.fieldId,
+                    pos,
+                }
+
+                component.setState({
+                    placeholderPosition: pos
+                });
+            }
+
         }
 
     },
+
     drop(props, monitor, component) {
         const designer = component.context;
         let dragItem = monitor.getItem();
 
+        if (!isWidget(dragItem)) {
+            return;
+        }
+
+        const dropId = get(dragItem, '_dropTarget.id', null);
+        const dropPos = get(dragItem, '_dropTarget.pos', 'none');
+
+        delete dragItem._dropTarget;
+
         if (isWidget(dragItem)) {
             dragItem = dragItem.props;
-            designer.addItem(dragItem);
-            console.log('move1')
+        }
+
+        if (dropId) {
+            if (dropPos === 'top') {
+                designer.insertBefore(dragItem, dropId);
+            } else if (dropPos === 'bottom') {
+                designer.insertAfter(dragItem, dropId);
+            } else {
+                designer.addItem(dragItem);
+            }
         } else {
-            console.log('move2')
+            designer.addItem(dragItem);
         }
     }
 };
@@ -91,6 +140,7 @@ const dropCollect = (connect, monitor) => {
         connectDropTarget: connect.dropTarget(),
         isOver: monitor.isOver({ shallow: true }),
         canDrop: monitor.canDrop(),
+        dragItem: monitor.getItem(),
     }
 }
 
@@ -102,48 +152,48 @@ class WidgetPreviewItem extends React.Component {
         placeholderPosition: 'none', //none after before top bottom
     }
 
+    handlePreviewClick(item) {
+        const designer = this.context;
+        designer.setActiveId(item.fieldId);
+    }
+
+    handleRemove = () => {
+        const designer = this.context;
+        const { item } = this.props;
+        designer.removeItem(item.fieldId)
+    }
+
     render() {
-        const { connectDropTarget, connectDragSource, isDragging, isOver, canDrop, item } = this.props;
+        const { connectDropTarget, connectDragSource, isDragging, isOver, canDrop, item, dragItem } = this.props;
         const { placeholderPosition } = this.state;
-        // const layout = this.context;
+        const designer = this.context;
+        const activeId = designer.getActiveId();
+        //如果来源不是组建面板,则是排序模式
+        const isSortMode = dragItem && !isWidget(dragItem);
         // const items = layout.getLayoutChildren(data.id);
-        console.log('isOver', isOver)
 
         return connectDropTarget(
-            <div ref={connectDragSource} className={cx({
+            <div className={cx({
                 "widget-preview-item-wrapper": true,
                 "droppable": isOver,
+                "dragging": isDragging,
                 // "drop-tips": canDrop,
             })}>
-                {placeholderPosition === 'top' && isOver ? <WidgetPlaceholderItem /> : null}
-                <div className="widget-preview-item">
+                {placeholderPosition === 'top' && isOver && !isSortMode ? <WidgetPlaceholderItem /> : null}
+                <div
+                    ref={connectDragSource}
+                    className={cx({
+                        "widget-preview-item": true,
+                        "widget-preview-item-selected": activeId === item.fieldId,
+                    })}
+                    onClick={this.handlePreviewClick.bind(this, item)}
+                >
                     <DefaultPreview {...item} />
+                    <span className="widget-preview-close" onClick={this.handleRemove}>x</span>
                 </div>
-                {placeholderPosition === 'bottom' && isOver ? <WidgetPlaceholderItem /> : null}
+                {placeholderPosition === 'bottom' && isOver && !isSortMode ? <WidgetPlaceholderItem /> : null}
             </div>
         );
-
-        // return (
-        //     <>
-        //         {placeholderPosition === 'top' && isOver ? <WidgetPlaceholderItem /> : null}
-        //         {
-        //             connectDropTarget(
-        //                 <div ref={connectDragSource} className={cx({
-        //                     "widget-preview-item": true,
-        //                     "droppable": isOver,
-        //                     // "drop-tips": canDrop,
-        //                 })}>
-        //                     <div className="widget-preview-item-inner">
-        //                         NOBO-TEST
-        //                     </div>
-        //                 </div>
-        //             )
-        //         }
-        //         {placeholderPosition === 'bottom' && isOver ? <WidgetPlaceholderItem /> : null}
-        //     </>
-        // );
-
-
     }
 }
 

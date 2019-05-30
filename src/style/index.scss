@@ -38,7 +38,7 @@
     }
 
     .widgets-panel {
-        flex: 0;
+        flex: none;
         background: #FFF;
         display: flex;
         flex-direction: column;
@@ -46,7 +46,7 @@
         // box-shadow: rgba(213, 213, 213, 0.5) 0px 2px 30px 0px;
 
         .widgets-panel-header {
-            flex: 0;
+            flex: none;
             padding: 0 10px;
             height: 32px;
             line-height: 32px;
@@ -106,17 +106,22 @@
             //     border: 1px dashed #81bb80;
             // }
 
+
             .drag-item-placeholder {
                 padding-top: 12px;
 
                 &-inner {
-                    height: 45px;
+                    height: 46px;
                     border: 1px dashed #cfd1d2;
                 }
             }
 
             .widget-preview-item-wrapper {
                 padding-top: 12px;
+
+                &.dragging {
+                    opacity: .2;
+                }
 
                 .widget-preview-item {
                     position: relative;
@@ -176,24 +181,40 @@
                             flex: 1;
                         }
 
-                        .widget-preview-close {
-                            position: absolute;
-                            top: 0;
-                            right: 0;
-                            display: none;
-                            cursor: pointer;
-                            width: 18px;
-                            height: 18px;
-                        }
-
                         &:hover {
                             border: 1px dotted #007ED3;
-
-                            .widget-preview-close {
-                                display: block;
-                            }
                         }
 
+                    }
+
+                    .widget-preview-close {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        display: none;
+                        cursor: pointer;
+                        text-align: center;
+                        width: 18px;
+                        height: 18px;
+                        background: #007ED3;
+                        color: #fff;
+                        line-height: 18px;
+                    }
+
+                    &:hover {
+                        .widget-preview-close {
+                            display: block;
+                        }
+                    }
+
+                    &-selected {
+                        .widget-preview-item-inner {
+                            border: 1px solid #007ED3;
+                        }
+
+                        .widget-preview-close {
+                            display: block;
+                        }
                     }
                 }
 
@@ -208,6 +229,7 @@
     }
 
     .property-panel {
+        flex: none;
         width: 300px;
         padding: 10px;
         background: #FFF;

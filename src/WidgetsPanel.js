@@ -8,7 +8,7 @@ export default class WidgetsPanel extends React.Component {
         return (
             <div className="widgets-panel">
                 <div className="widgets-panel-header">
-                    组件
+                    控件列表
                 </div>
                 <div className="widgets-panel-body">
                     {

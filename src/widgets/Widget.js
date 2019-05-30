@@ -1,6 +1,7 @@
 import { uuid } from '../utils';
 import DefaultPreview from './components/common/Preview';
 import get from 'lodash/get';
+import omit from 'lodash/omit';
 
 export default function Widget(options = {}, props) {
     return {
@@ -19,10 +20,15 @@ export default function Widget(options = {}, props) {
                 title: this.title,
                 placeholder: "请输入",
                 dataType: 'varchar',
-                dataLength: 255,
-                isRequire: false,
+                dataLength: '255',
+                isRequire: '1',
+                defaultValue: '',
                 width: '100%',
-                ...options
+                ...omit(options, [
+                    'icon',
+                    'PropertyPanel',
+                    'Preview',
+                ])
             }
         }
     };

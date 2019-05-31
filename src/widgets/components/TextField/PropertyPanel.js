@@ -5,6 +5,8 @@ import {
     NativeField,
 } from 'components/Form';
 import 'components/Form/style/index.scss';
+import { MultipleInputField } from 'components/FormField'
+import SingleCheck from 'components/HTMLForm/SingleCheck';
 
 export default function ({ data, onChange }) {
 
@@ -18,6 +20,14 @@ export default function ({ data, onChange }) {
             formValue={data}
             labelWidth={60}
         >
+
+            <FormItem
+                className="design-property-field"
+                label="字段名称"
+                name="titlex"
+            >
+                <MultipleInputField />
+            </FormItem>
             <FormItem
                 className="design-property-field"
                 label="字段名称"
@@ -48,13 +58,14 @@ export default function ({ data, onChange }) {
             <FormItem
                 className="design-property-field"
                 label="必填"
-                name="isRequired"
+                name="required"
             >
-                <NativeField
-                    type="checkbox"
-                    component="input"
+                <SingleCheck
+                    on="1"
+                    off="0"
                 />
             </FormItem>
+
             <FormItem
                 className="design-property-field"
                 label="其他"

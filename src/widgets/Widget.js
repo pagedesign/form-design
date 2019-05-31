@@ -21,7 +21,7 @@ export default function Widget(options = {}, props) {
                 placeholder: "请输入",
                 dataType: 'varchar',
                 dataLength: '255',
-                isRequire: '1',
+                required: '0',
                 defaultValue: '',
                 width: '100%',
                 ...omit(options, [

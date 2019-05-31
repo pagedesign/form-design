@@ -27,7 +27,7 @@ export default class PropertyPanel extends React.Component {
 
         return (
             <div className="property-panel">
-                <PPanel data={activeItem} onChange={this.onDataChange} />
+                <PPanel data={activeItem} key={activeItem.fieldId} onChange={this.onDataChange} />
             </div>
         );
     }

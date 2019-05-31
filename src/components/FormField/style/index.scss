@@ -1,0 +1,22 @@
+.multi-input-wrapper {
+    .multi-input-item {
+        display: flex;
+        .multi-input {
+            flex: auto;
+            input {
+                width: 100%;
+            }
+        }
+        .multi-input-tools {
+            flex: none;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: #515a6e;
+            > * {
+                cursor: pointer;
+                margin-left: 6px;
+            }
+        }
+    }
+}

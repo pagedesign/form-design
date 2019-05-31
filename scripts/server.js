@@ -4,7 +4,7 @@ const path = require('path');
 packez.server({
     index: './demo/index.js',
 }, 'dist', {
-        publicPath: './',
+        publicPath: '/',
         assest: {
             css: {
                 output: "css",
@@ -14,6 +14,7 @@ packez.server({
             },
             media: {
                 output: 'media',
+                publicPath: "/media"
             }
         },
         resolve: {

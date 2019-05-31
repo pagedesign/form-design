@@ -1,7 +1,9 @@
 import React from 'react';
+import { FormItem, NativeField } from '../Form'
 import classNames from 'classnames';
 
 export default function Checkbox(props) {
+
     const onChange = (e) => {
         const target = e.target;
         if (target.checked) {
@@ -10,17 +12,14 @@ export default function Checkbox(props) {
             props.onChange && props.onChange(props.off);
         }
     }
-    const
+
 
     return (
-        <FormItem
+        <input
             {...props}
-            className={classNames("design-property-field", props.className)}
-        >
-            <NativeField
-                checked={props.value === props.on}
-                component="textarea"
-            />
-        </FormItem>
+            checked={props.value === props.on}
+            type="checkbox"
+            onChange={onChange}
+        />
     );
 }

@@ -3,8 +3,8 @@ import {
     Form,
     FormItem,
     NativeField,
-} from '../../../components/Form';
-import '../../../components/Form/style/index.scss';
+} from 'components/Form';
+import 'components/Form/style/index.scss';
 
 export default function ({ data, onChange }) {
 
@@ -19,6 +19,7 @@ export default function ({ data, onChange }) {
             labelWidth={60}
         >
             <FormItem
+                className="design-property-field"
                 label="字段名称"
                 name="title"
             >
@@ -27,6 +28,7 @@ export default function ({ data, onChange }) {
                 />
             </FormItem>
             <FormItem
+                className="design-property-field"
                 label="提示文本"
                 name="placeholder"
             >
@@ -35,6 +37,7 @@ export default function ({ data, onChange }) {
                 />
             </FormItem>
             <FormItem
+                className="design-property-field"
                 label="默认值"
                 name="defaultValue"
             >
@@ -43,12 +46,22 @@ export default function ({ data, onChange }) {
                 />
             </FormItem>
             <FormItem
+                className="design-property-field"
                 label="必填"
-                name="defaultValue"
+                name="isRequired"
             >
                 <NativeField
                     type="checkbox"
                     component="input"
+                />
+            </FormItem>
+            <FormItem
+                className="design-property-field"
+                label="其他"
+                name="abc"
+            >
+                <NativeField
+                    component="textarea"
                 />
             </FormItem>
         </Form >

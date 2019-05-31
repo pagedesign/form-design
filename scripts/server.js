@@ -19,7 +19,7 @@ packez.server({
         resolve: {
             alias: {
                 '@': path.resolve(__dirname, '../src'),
-                'datax': path.resolve(__dirname, '../src/datax'),
+                'components': path.resolve(__dirname, '../src/components'),
                 'nexui': path.resolve(__dirname, '../src/nexui-react'),
             }
         },

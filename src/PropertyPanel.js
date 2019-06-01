@@ -1,6 +1,11 @@
 import React from 'react';
 import LayoutContext from './LayoutContext';
 import { getWidgetPropertyPanel } from './widgets';
+import {
+    Form,
+    FormItem,
+    NativeField,
+} from 'components/Form';
 
 export default class PropertyPanel extends React.Component {
 
@@ -27,7 +32,13 @@ export default class PropertyPanel extends React.Component {
 
         return (
             <div className="property-panel">
-                <PPanel data={activeItem} key={activeItem.fieldId} onChange={this.onDataChange} />
+                <Form
+                    onChange={this.onDataChange}
+                    formValue={activeItem}
+                    labelWidth={60}
+                >
+                    <PPanel data={activeItem} key={activeItem.fieldId} />
+                </Form>
             </div>
         );
     }

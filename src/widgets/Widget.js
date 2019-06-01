@@ -15,7 +15,7 @@ export default function Widget(options = {}, props) {
 
             return {
                 fieldId: uuid(),
-                fieldName: uuid(),
+                fieldName: 'field_' + uuid(),
                 xtype: this.xtype,
                 title: this.title,
                 placeholder: "请输入",

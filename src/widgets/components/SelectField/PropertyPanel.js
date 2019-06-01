@@ -20,12 +20,10 @@ export default function () {
             <CommonPropertyPanel />
             <FormItem
                 className="design-property-field"
-                label="高度"
-                name="height"
+                label="选项值"
+                name="data"
             >
-                <NativeField
-                    component="input"
-                />
+                <MultipleInputField />
             </FormItem>
             <ValidatePropertyPanel />
         </div>

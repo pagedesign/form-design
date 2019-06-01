@@ -19,7 +19,7 @@ export default class MultipleInputField extends React.Component {
         }
 
         return {
-            value,
+            value: [...value],
             sIndex: Math.max(value.length, state.sIndex),
         }
     }
@@ -76,10 +76,11 @@ export default class MultipleInputField extends React.Component {
     renderItem = (item, i) => {
 
         return (
-            <div className="multi-input-item" key={`${item.value}_${i}`}>
+            <div className="multi-input-item" key={i}>
                 <div className="multi-input">
                     <input
-                        defaultValue={item.label}
+                        value={item.label}
+                        placeholder="选项名称"
                         onChange={this.onItemChange.bind(this, i)}
                     />
                 </div>

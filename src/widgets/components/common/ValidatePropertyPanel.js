@@ -9,25 +9,23 @@ import {
     DisplayField,
     WidthInputField
 } from 'components/FormField';
-
-import CommonPropertyPanel from '../common/CommonPropertyPanel';
-import ValidatePropertyPanel from '../common/ValidatePropertyPanel';
+import SingleCheck from 'components/HTMLForm/SingleCheck';
 
 export default function () {
 
     return (
         <div>
-            <CommonPropertyPanel />
+            <div className="property-header-title">输入校验</div>
             <FormItem
                 className="design-property-field"
-                label="高度"
-                name="height"
+                label="必填"
+                name="required"
             >
-                <NativeField
-                    component="input"
+                <SingleCheck
+                    on="1"
+                    off="0"
                 />
             </FormItem>
-            <ValidatePropertyPanel />
-        </div>
+        </div >
     );
 }

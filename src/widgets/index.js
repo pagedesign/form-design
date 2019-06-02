@@ -1,3 +1,4 @@
+import WidgetManager from '../WidgetManager';
 import WidgetItem from './WidgetItem';
 import WidgetPreviewItem from './WidgetPreviewItem';
 import WidgetPlaceholderItem from './WidgetPlaceholderItem';

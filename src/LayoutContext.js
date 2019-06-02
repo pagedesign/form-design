@@ -1,3 +1,3 @@
-import React from 'react';
+import DesignContext from './DesignContext';
 
-export default React.createContext({});
+export default DesignContext;

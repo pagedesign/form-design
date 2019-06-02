@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import FormDesign from '../src';
+import FormDesigner from '../src';
 
 import '../src/style';
 
 function App() {
+    const [metadata, onMetadataChange] = React.useState({
+        items: []
+    })
 
     return (
         <div style={{
@@ -13,7 +16,7 @@ function App() {
             width: 1400,
             minHeight: 500
         }}>
-            <FormDesign onChange={console.log} />
+            <FormDesigner metadata={metadata} onChange={onMetadataChange} />
         </div>
     );
 }

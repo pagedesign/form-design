@@ -2,7 +2,7 @@
     "name": "form-design-core",
     "version": "0.1.0",
     "description": "表单设计器",
-    "main": "index.js",
+    "main": "lib/index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "transform-es src -d lib -c -w",
@@ -19,6 +19,10 @@
     ],
     "author": "nobo.zhou@foxmail.com",
     "license": "MIT",
+    "files": [
+        "*.md",
+        "lib"
+    ],
     "bugs": {
         "url": "https://github.com/pagedesign/form-design/issues"
     },

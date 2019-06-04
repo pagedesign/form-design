@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DesignModel from './DesignModel';
 
+import DesignModel from './DesignModel';
 import WidgetsPanel from './panels/WidgetsPanel';
 import PropertyPanel from './panels/PropertyPanel';
 import DesignPanel from './panels/DesignPanel';
@@ -11,8 +11,6 @@ import {
     P_MOBILE,
     P_IPAD,
 } from './constants';
-
-import widgets from './widgets2';
 
 export default class Designer extends React.Component {
     static propTypes = {
@@ -24,7 +22,7 @@ export default class Designer extends React.Component {
     static defaultProps = {
         onChange: null,
         platform: P_PC,
-        widgets: widgets,
+        widgets: [],
         metadata: {
             items: [],
         }
@@ -49,8 +47,8 @@ export default class Designer extends React.Component {
                 platform={platform}
                 onChange={this.handleModelChange}
             >
-                <div className="ex-form-design">
-                    <div className="ex-form-design-container">
+                <div className="csos-form-designer">
+                    <div className="csos-form-designer-container">
                         <WidgetsPanel />
                         <DesignPanel />
                         <PropertyPanel />

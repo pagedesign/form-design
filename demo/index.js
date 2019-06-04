@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 
 import FormDesigner from '../src';
 
+import widgets from './widgets';
+
 import '../src/style';
 
 function App() {
@@ -16,7 +18,11 @@ function App() {
             width: 1400,
             minHeight: 500
         }}>
-            <FormDesigner metadata={metadata} onChange={onMetadataChange} />
+            <FormDesigner
+                widgets={widgets}
+                metadata={metadata}
+                onChange={onMetadataChange}
+            />
         </div>
     );
 }

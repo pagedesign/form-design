@@ -22,7 +22,7 @@ const spec = {
     // },
     drop(props, monitor, component) {
         if (monitor.didDrop()) {
-            console.log('widget has did drop')
+            // console.log('widget has did drop')
             return;
         }
         const dragItem = monitor.getItem();

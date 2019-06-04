@@ -2,8 +2,6 @@ import React from 'react';
 import DesignContext from '../DesignContext';
 import Widget from './Widget';
 
-// import { isWidget } from '../utils'
-
 import find from 'lodash/find';
 import findIndex from 'lodash/findIndex';
 
@@ -27,7 +25,6 @@ export default class DesignModel extends React.Component {
     static defaultProps = {
         onChange: null,
         widgets: [],
-        widgetsMap: {},
         items: [],
     }
 
@@ -52,9 +49,9 @@ export default class DesignModel extends React.Component {
         return widgetsMap[xtype] || null;
     }
 
-    isWidget(widget) {
-        return !!widget.$$widget;
-    }
+    // isWidget(widget) {
+    //     return !!widget.$$widget;
+    // }
 
     getWidgets() {
         const { widgets } = this.state;
@@ -96,8 +93,6 @@ export default class DesignModel extends React.Component {
     addItem(item) {
         const items = this.getItems();
 
-        // item = isWidget(item) ? item.getData() : item;
-
         items.push(item);
 
         this.onChange(items);
@@ -122,15 +117,11 @@ export default class DesignModel extends React.Component {
 
     insertBefore(item, fieldId) {
         const items = this.getItems();
-        console.log('insertBefore')
 
         //判断当前item是否已经存在, 如果存在则先删除
         const oIdx = this.getItemIndex(item.fieldId);
         if (oIdx > -1) {
-            console.log('执行移动操作')
             items.splice(oIdx, 1);
-        } else {
-            console.log('执行插入操作')
         }
 
         //插入操作
@@ -142,7 +133,6 @@ export default class DesignModel extends React.Component {
 
     insertAfter(item, fieldId) {
         const items = this.getItems();
-        console.log('insertAfter')
 
         //判断当前item是否已经存在, 如果存在则先删除
         const oIdx = this.getItemIndex(item.fieldId);
@@ -159,7 +149,7 @@ export default class DesignModel extends React.Component {
 
     getModel() {
         return {
-            isWidget: this.isWidget.bind(this),
+            //   isWidget: this.isWidget.bind(this),
             getWidget: this.getWidget.bind(this),
             getWidgets: this.getWidgets.bind(this),
             setActiveId: this.setActiveId.bind(this),

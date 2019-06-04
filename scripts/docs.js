@@ -1,10 +1,10 @@
 const packez = require('packez');
 const path = require('path');
 
-packez.server({
+packez.build({
     index: './demo/index.js',
 }, 'docs', {
-        publicPath: '/',
+        publicPath: './',
         assest: {
             css: {
                 output: "css",

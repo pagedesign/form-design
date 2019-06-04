@@ -7,13 +7,10 @@ import {
     DropTarget,
 } from 'react-dnd';
 import cx from 'classnames';
-// import DefaultPreview from './components/common/Preview'
 import {
     WIDGET_DRAG_DROP_SCOPE
 } from '../../constants';
-// import WidgetPlaceholderItem from './WidgetPlaceholderItem';
 import DesignContext from '../../DesignContext';
-// import isWidget from './isWidget';
 
 const dragSpec = {
     beginDrag(props) {
@@ -26,10 +23,9 @@ const dragSpec = {
             item: item,
         };
     },
-    endDrag(props, monitor, component) {
-        return;
-        console.log('endDrag')
-    }
+    // endDrag(props, monitor, component) {
+    //     console.log('endDrag')
+    // }
 };
 
 const dragCollect = (connect, monitor) => {
@@ -46,7 +42,6 @@ const dropSpec = {
         if (dragItem.isWidgetDragging) return true;
 
         return props.item.fieldId !== dragItem.item.fieldId;
-
     },
 
     hover(props, monitor, component) {
@@ -65,7 +60,6 @@ const dropSpec = {
         const previewDOM = findDOMNode(component);
 
         if (isSortMode) {
-            // console.log('isSortMode', item.fieldId, dragItemFieldId)
             //顺序调整模式
             if (item.fieldId === dragItemFieldId) {
                 return;
@@ -73,13 +67,10 @@ const dropSpec = {
                 const targetOffset = previewDOM.querySelector('.widget-preview-item').getBoundingClientRect();
                 const middleY = targetOffset.bottom - (targetOffset.height / 2);
                 if (dragOffset.y <= middleY) {
-                    console.log('top')
                     designer.insertBefore(dragItem.item, item.fieldId);
                 } else {
                     designer.insertAfter(dragItem.item, item.fieldId);
-                    console.log('bottom')
                 }
-                // console.log('can sort', middleY)
             }
 
         } else {

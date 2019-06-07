@@ -28,3 +28,29 @@ ReactDOM.render(<App />, document.getElementById('root'))
 
 ```
 
+## FormDesigner
+
+### props
+
+#### widgets 
+设计器控件列表
+
+#### metadata 控件布局属性
+eg:
+```
+{
+    items: []
+}
+```
+
+#### onChange
+布局发生改变时触发
+
+## WidgetDropAccepter
+
+### props
+
+#### items
+
+#### pid
+

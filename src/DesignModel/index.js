@@ -74,12 +74,18 @@ export default class DesignModel extends React.Component {
         return this.getItem(activeId) || null;
     }
 
-    getItems() {
+    getItems(pid = null) {
+        const items = this.getAllItems();
+        return items.filter(item => item.$pid == pid);
+    }
+
+    getAllItems() {
         return [...this.state.items];
     }
 
+
     updateItem(item) {
-        const items = this.getItems();
+        const items = this.getAllItems();
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
 
@@ -90,8 +96,10 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
-    addItem(item) {
-        const items = this.getItems();
+    addItem(item, pid = null) {
+        const items = this.getAllItems();
+
+        item.$pid = pid;
 
         items.push(item);
 
@@ -99,30 +107,33 @@ export default class DesignModel extends React.Component {
     }
 
     removeItem(fieldId) {
-        const items = this.getItems();
+        const items = this.getAllItems();
         const ret = items.filter(item => item.fieldId !== fieldId);
 
         this.onChange(ret);
     }
 
     getItemIndex(fieldId) {
-        const items = this.getItems();
+        const items = this.getAllItems();
         return findIndex(items, item => item.fieldId === fieldId)
     }
 
     getItem(fieldId) {
-        const items = this.getItems();
+        const items = this.getAllItems();
         return find(items, item => item.fieldId === fieldId)
     }
 
     insertBefore(item, fieldId) {
-        const items = this.getItems();
+        const items = this.getAllItems();
 
         //判断当前item是否已经存在, 如果存在则先删除
         const oIdx = this.getItemIndex(item.fieldId);
         if (oIdx > -1) {
             items.splice(oIdx, 1);
         }
+
+        const bItem = this.getItem(fieldId);
+        item.$pid = bItem.$pid;
 
         //插入操作
         const idx = this.getItemIndex(fieldId);
@@ -132,13 +143,16 @@ export default class DesignModel extends React.Component {
     }
 
     insertAfter(item, fieldId) {
-        const items = this.getItems();
+        const items = this.getAllItems();
 
         //判断当前item是否已经存在, 如果存在则先删除
         const oIdx = this.getItemIndex(item.fieldId);
         if (oIdx > -1) {
             items.splice(oIdx, 1);
         }
+
+        const bItem = this.getItem(fieldId);
+        item.$pid = bItem.$pid;
 
         //插入操作
         const idx = this.getItemIndex(fieldId);
@@ -158,6 +172,7 @@ export default class DesignModel extends React.Component {
             addItem: this.addItem.bind(this),
             updateItem: this.updateItem.bind(this),
             getItems: this.getItems.bind(this),
+            getAllItems: this.getAllItems.bind(this),
             removeItem: this.removeItem.bind(this),
             getItemIndex: this.getItemIndex.bind(this),
             getItem: this.getItem.bind(this),

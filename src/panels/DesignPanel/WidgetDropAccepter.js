@@ -17,8 +17,11 @@ const spec = {
         return dragItem.isWidgetDragging;
         // return isWidget(item);
     },
-    // hover() {
-    //     console.log('WidgetDropAccepter over...')
+    // hover(props, monitor, component) {
+    //     const isOver = monitor.isOver({ shallow: true });
+    //     if (isOver) {
+    //         console.log('WidgetDropAccepter over...')
+    //     }
     // },
     drop(props, monitor, component) {
         if (monitor.didDrop()) {
@@ -27,7 +30,8 @@ const spec = {
         }
         const dragItem = monitor.getItem();
         const designer = component.context;
-        designer.addItem(dragItem.item);
+        console.log(props.pid)
+        designer.addItem(dragItem.item, props.pid);
     }
 };
 
@@ -43,6 +47,10 @@ const collect = (connect, monitor) => {
 class WidgetDropAccepter extends React.Component {
 
     static contextType = DesignContext;
+
+    static defaultProps = {
+        pid: null,
+    }
 
     rendrePlaceholder() {
         const { dragItem } = this.props;
@@ -62,9 +70,9 @@ class WidgetDropAccepter extends React.Component {
     }
 
     render() {
-        const { connectDropTarget, isOver, canDrop, dragItem } = this.props;
-        const designer = this.context;
-        const items = designer.getItems();
+        const { connectDropTarget, isOver, canDrop, dragItem, items } = this.props;
+        // const designer = this.context;
+        // const items = designer.getItems(pid);
 
         return connectDropTarget(
             <div className={cx({

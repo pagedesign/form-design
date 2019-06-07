@@ -45,6 +45,9 @@ const dropSpec = {
     },
 
     hover(props, monitor, component) {
+        const isOver = monitor.isOver({ shallow: true });
+        if (!isOver) return;
+        // console.log('item hover...')
         const { placeholderPosition } = component.state;
         const designer = component.context;
         const { item } = props;
@@ -102,6 +105,9 @@ const dropSpec = {
     },
 
     drop(props, monitor, component) {
+        if (monitor.didDrop()) {
+            return;
+        }
         const designer = component.context;
         let dragItem = monitor.getItem();
 
@@ -181,7 +187,7 @@ class WidgetPreviewItem extends React.Component {
                     })}
                     onClick={this.handlePreviewClick.bind(this, item)}
                 >
-                    <widget.Preview item={item} />
+                    <widget.Preview item={item} designer={designer} />
                     <span className="widget-preview-close" onClick={this.handleRemove}>x</span>
                 </div>
                 {placeholderPosition === 'bottom' && isOver && !isSortMode ? <widget.PlaceholderPreview /> : null}

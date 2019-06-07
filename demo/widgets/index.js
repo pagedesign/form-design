@@ -6,6 +6,7 @@ import SelectField from './SelectField';
 // import DateField from './DateField';
 import URLField from './URLField';
 // import FileField from './FileField';
+import DetailedField from './DetailedField';
 
 export default [
     TextField,
@@ -15,5 +16,6 @@ export default [
     // NumberField,
     // DateField,
     URLField,
+    DetailedField,
     // FileField,
 ];

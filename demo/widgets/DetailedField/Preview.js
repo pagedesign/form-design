@@ -21,6 +21,13 @@ export default function (props) {
             <label className="widget-preview-detailed-sub">{item.title}</label>
             <div className="widget-preview-detailed-list">
                 <WidgetDropAccepter
+                    style={{
+                        width: 'auto',
+                        height: 'auto',
+                        minHeight: 150,
+                        paddingBottom: 10,
+                        border: 'none',
+                    }}
                     items={items}
                     pid={item.fieldId}
                 />

@@ -76,6 +76,7 @@ export default class DesignModel extends React.Component {
 
     getItems(pid = null) {
         const items = this.getAllItems();
+        console.log(items, 'axxx')
         return items.filter(item => item.$pid == pid);
     }
 

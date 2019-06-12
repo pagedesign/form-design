@@ -151,7 +151,11 @@ class WidgetPreviewItem extends React.Component {
         placeholderPosition: 'none', //none after before top bottom
     }
 
-    handlePreviewClick(item) {
+    handlePreviewClick(item, e) {
+        if (e.isDefaultPrevented()) {
+            return;
+        }
+        e.preventDefault();
         const designer = this.context;
         designer.setActiveId(item.fieldId);
     }

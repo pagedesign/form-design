@@ -70,16 +70,18 @@ class WidgetDropAccepter extends React.Component {
     }
 
     render() {
-        const { connectDropTarget, isOver, canDrop, dragItem, items } = this.props;
+        const { connectDropTarget, isOver, canDrop, dragItem, items, style = {} } = this.props;
         // const designer = this.context;
         // const items = designer.getItems(pid);
 
         return connectDropTarget(
-            <div className={cx({
-                "design-layout-container": true,
-                "drag-over": isOver,
-                "dropable": canDrop,
-            })}>
+            <div
+                style={style}
+                className={cx({
+                    "design-layout-container": true,
+                    "drag-over": isOver,
+                    "dropable": canDrop,
+                })}>
                 {
                     items.map(this.renderItem)
                 }

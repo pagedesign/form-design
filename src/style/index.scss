@@ -110,6 +110,15 @@
             //     border: 1px dashed #81bb80;
             // }
 
+            .design-layout-container {
+                width: auto;
+                height: auto;
+                min-height: 90px;
+                padding-bottom: 0;
+                box-shadow: none;
+                border: none;
+            }
+
             .drag-item-placeholder {
                 padding-top: 12px;
 
@@ -204,17 +213,17 @@
                     }
 
                     &:hover {
-                        .widget-preview-close {
+                        >.widget-preview-close {
                             display: block;
                         }
                     }
 
                     &-selected {
-                        .widget-preview-item-inner {
+                        >.widget-preview-item-inner {
                             border: 1px solid #007ed3;
                         }
 
-                        .widget-preview-close {
+                        >.widget-preview-close {
                             display: block;
                         }
                     }

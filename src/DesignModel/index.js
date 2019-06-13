@@ -125,7 +125,17 @@ export default class DesignModel extends React.Component {
 
     removeItem(fieldId) {
         const items = this.getAllItems();
-        const ret = items.filter(item => item.fieldId !== fieldId);
+        //移除指定项目及子项目
+        const ret = items.filter(item => {
+            let shouldRemove = item.fieldId === fieldId;
+
+            if (!shouldRemove) {
+                const pids = this.getPids(item.fieldId);
+                shouldRemove = pids.indexOf(fieldId) > -1;
+            }
+
+            return !shouldRemove;
+        });
 
         this.onChange(ret);
     }

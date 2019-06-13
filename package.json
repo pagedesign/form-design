@@ -1,6 +1,6 @@
 {
     "name": "form-design-core",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "表单设计器",
     "main": "lib/index.js",
     "scripts": {

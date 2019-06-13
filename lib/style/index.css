@@ -74,6 +74,14 @@
       -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
               box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.1);
       border: 1px solid #dedee4; }
+      .csos-form-designer-container .design-panel .design-layout-container .design-layout-container {
+        width: auto;
+        height: auto;
+        min-height: 90px;
+        padding-bottom: 0;
+        -webkit-box-shadow: none;
+                box-shadow: none;
+        border: none; }
       .csos-form-designer-container .design-panel .design-layout-container .drag-item-placeholder {
         padding-top: 12px; }
         .csos-form-designer-container .design-panel .design-layout-container .drag-item-placeholder-inner {
@@ -156,11 +164,11 @@
             background: #007ed3;
             color: #fff;
             line-height: 18px; }
-          .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item:hover .widget-preview-close {
+          .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item:hover > .widget-preview-close {
             display: block; }
-          .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected .widget-preview-item-inner {
+          .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected > .widget-preview-item-inner {
             border: 1px solid #007ed3; }
-          .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected .widget-preview-close {
+          .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item-selected > .widget-preview-close {
             display: block; }
         .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .drag-item-placeholder:first-child {
           padding-top: 0;

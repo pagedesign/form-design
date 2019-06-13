@@ -96,7 +96,7 @@
         background: #efefef;
 
         .design-layout-container {
-            width: 350px;
+            width: 800px;
             height: 600px;
             padding-bottom: 60px;
             margin: 0 auto;
@@ -243,6 +243,8 @@
         padding: 10px;
         background: #fff;
         border-left: 1px solid rgb(222, 222, 228);
+        overflow: auto;
+        font-size: 14px;
     }
 }
 

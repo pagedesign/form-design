@@ -187,12 +187,20 @@ class WidgetPreviewItem extends React.Component {
         // const items = layout.getLayoutChildren(data.id);
 
         return connectDropTarget(
-            <div className={cx({
-                "widget-preview-item-wrapper": true,
-                "droppable": isOver,
-                "dragging": isDragging,
-                // "drop-tips": canDrop,
-            })}>
+            <div
+                className={cx({
+                    "widget-preview-item-wrapper": true,
+                    "droppable": isOver,
+                    "dragging": isDragging,
+                    // "drop-tips": canDrop,
+                })}
+
+                style={{
+                    display: 'inline-block',
+                    width: item.width || '100%'
+                }}
+
+            >
                 {placeholderPosition === 'top' && isOver && !isSortMode ? <widget.PlaceholderPreview /> : null}
                 <div
                     ref={connectDragSource}

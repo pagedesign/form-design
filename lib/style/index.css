@@ -65,7 +65,7 @@
     padding: 10px 0;
     background: #efefef; }
     .csos-form-designer-container .design-panel .design-layout-container {
-      width: 350px;
+      width: 800px;
       height: 600px;
       padding-bottom: 60px;
       margin: 0 auto;
@@ -179,7 +179,9 @@
     width: 300px;
     padding: 10px;
     background: #fff;
-    border-left: 1px solid #dedee4; }
+    border-left: 1px solid #dedee4;
+    overflow: auto;
+    font-size: 14px; }
 
 .design-property-field {
   margin-bottom: 15px; }

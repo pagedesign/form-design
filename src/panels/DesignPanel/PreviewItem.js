@@ -36,17 +36,26 @@ const dragCollect = (connect, monitor) => {
 }
 
 const dropSpec = {
-
-    canDrop(props, monitor, component) {
+    canDrop(props, monitor) {
+        const designer = props.designer;
         const dragItem = monitor.getItem();
         if (dragItem.isWidgetDragging) return true;
+        const dragItemFieldId = dragItem.item.fieldId;
+        const targetFieldId = props.item.fieldId; //currentFieldId;
+        const pids = designer.getPids(targetFieldId);
+        // console.log(targetFieldId, 'pids: ', pids);
+        //解决父节点拖动到子节点的情况
+        if (pids.indexOf(dragItemFieldId) > -1) return false;
 
-        return props.item.fieldId !== dragItem.item.fieldId;
+        return targetFieldId !== dragItemFieldId;
     },
 
     hover(props, monitor, component) {
+        if (!monitor.canDrop()) return;
+
         const isOver = monitor.isOver({ shallow: true });
         if (!isOver) return;
+
         // console.log('item hover...')
         const { placeholderPosition } = component.state;
         const designer = component.context;
@@ -67,6 +76,7 @@ const dropSpec = {
             if (item.fieldId === dragItemFieldId) {
                 return;
             } else {
+                // console.log(dragItem.item, item.fieldId, 'crash1')
                 const targetOffset = previewDOM.querySelector('.widget-preview-item').getBoundingClientRect();
                 const middleY = targetOffset.bottom - (targetOffset.height / 2);
                 if (dragOffset.y <= middleY) {
@@ -74,6 +84,7 @@ const dropSpec = {
                 } else {
                     designer.insertAfter(dragItem.item, item.fieldId);
                 }
+                // console.log(designer.getAllItems(), 'crash2')
             }
 
         } else {

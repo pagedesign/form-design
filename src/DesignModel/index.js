@@ -76,7 +76,7 @@ export default class DesignModel extends React.Component {
 
     getItems(pid = null) {
         const items = this.getAllItems();
-        console.log(items, 'axxx')
+        // console.log(items, 'axxx')
         return items.filter(item => item.$pid == pid);
     }
 
@@ -84,6 +84,22 @@ export default class DesignModel extends React.Component {
         return [...this.state.items];
     }
 
+    //获取组件的所有父级ID
+    getPids(fieldId) {
+        const pids = [];
+        let node = this.getItem(fieldId);
+        if (!node.$pid) return pids;
+
+        let currentFieldId = node.$pid;
+        let pNode;
+        while (pNode = this.getItem(currentFieldId)) {
+            pids.push(pNode.fieldId);
+            currentFieldId = pNode.$pid;
+            if (!currentFieldId) break;
+        }
+        // console.log(pids, 'pids');
+        return pids;
+    }
 
     updateItem(item) {
         const items = this.getAllItems();
@@ -152,11 +168,11 @@ export default class DesignModel extends React.Component {
             items.splice(oIdx, 1);
         }
 
-        const bItem = this.getItem(fieldId);
-        item.$pid = bItem.$pid;
+        const prevItem = this.getItem(fieldId);
+        item.$pid = prevItem.$pid;
 
-        //插入操作
-        const idx = this.getItemIndex(fieldId);
+        //插入操作 之前有删除操作, 要重新查找index
+        const idx = findIndex(items, item => item.fieldId === fieldId);
         items.splice(idx, 1, items[idx], item);
 
         this.onChange(items);
@@ -171,6 +187,7 @@ export default class DesignModel extends React.Component {
             getActiveId: this.getActiveId.bind(this),
             getActiveItem: this.getActiveItem.bind(this),
             addItem: this.addItem.bind(this),
+            getPids: this.getPids.bind(this),
             updateItem: this.updateItem.bind(this),
             getItems: this.getItems.bind(this),
             getAllItems: this.getAllItems.bind(this),

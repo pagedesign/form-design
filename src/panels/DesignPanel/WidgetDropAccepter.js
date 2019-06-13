@@ -15,9 +15,9 @@ const spec = {
     canDrop(props, monitor) {
         const dragItem = monitor.getItem();
         return dragItem.isWidgetDragging;
-        // return isWidget(item);
     },
     // hover(props, monitor, component) {
+    //      if(!monitor.canDrop()) return;
     //     const isOver = monitor.isOver({ shallow: true });
     //     if (isOver) {
     //         console.log('WidgetDropAccepter over...')
@@ -66,7 +66,7 @@ class WidgetDropAccepter extends React.Component {
         const xtype = item.xtype;
         const widget = designer.getWidget(xtype);
 
-        return <PreviewItem key={item.fieldId} widget={widget} item={item} />
+        return <PreviewItem designer={designer} key={item.fieldId} widget={widget} item={item} />
     }
 
     render() {

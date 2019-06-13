@@ -2,6 +2,7 @@ import { uuid } from '../../utils';
 
 export default () => {
     return {
+        $pid: null,
         fieldId: uuid(),
         fieldName: 'field_' + uuid(),
         placeholder: "请输入",

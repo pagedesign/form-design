@@ -42,6 +42,7 @@ export default class Widget {
         return {
             ...ret,
             xtype: this.xtype,
+            __tmp__: true,
         }
     }
 

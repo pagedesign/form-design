@@ -39,11 +39,11 @@ const dropSpec = {
     canDrop(props, monitor) {
         const designer = props.designer;
         const dragItem = monitor.getItem();
-        if (dragItem.isWidgetDragging) return true;
+        // if (dragItem.isWidgetDragging) return true;
         const dragItemFieldId = dragItem.item.fieldId;
         const targetFieldId = props.item.fieldId; //currentFieldId;
         const pids = designer.getPids(targetFieldId);
-        // console.log(targetFieldId, 'pids: ', pids);
+        console.log(targetFieldId, 'pids: ', pids, dragItemFieldId);
         //解决父节点拖动到子节点的情况
         if (pids.indexOf(dragItemFieldId) > -1) return false;
 
@@ -62,11 +62,12 @@ const dropSpec = {
         const { item } = props;
         const dragItem = monitor.getItem();
         const dragItemFieldId = dragItem.item.fieldId;
-        let isSortMode = false;
+        const isSortMode = true;
+        // let isSortMode = false;
 
-        if (!dragItem.isWidgetDragging) {
-            isSortMode = true;
-        }
+        // if (!dragItem.isWidgetDragging) {
+        //     isSortMode = true;
+        // }
 
         const dragOffset = monitor.getClientOffset();
         const previewDOM = findDOMNode(component);
@@ -116,15 +117,17 @@ const dropSpec = {
     },
 
     drop(props, monitor, component) {
-        if (monitor.didDrop()) {
+        if (monitor.didDrop() || !monitor.canDrop()) {
             return;
         }
+
+        console.log('dorp able???')
         const designer = component.context;
         let dragItem = monitor.getItem();
 
-        if (!dragItem.isWidgetDragging) {
-            return;
-        }
+        // if (!dragItem.isWidgetDragging) {
+        //     return;
+        // }
 
         const dropId = get(dragItem, '_dropTarget.id', null);
         const dropPos = get(dragItem, '_dropTarget.pos', 'none');
@@ -137,10 +140,12 @@ const dropSpec = {
             } else if (dropPos === 'bottom') {
                 designer.insertAfter(dragItem.item, dropId);
             } else {
-                designer.addItem(dragItem.item);
+                console.log('sort ????')
+                // designer.addItem(dragItem.item);
             }
         } else {
-            designer.addItem(dragItem.item);
+            // console.log('abcc')
+            // designer.addItem(dragItem.item);
         }
     }
 };

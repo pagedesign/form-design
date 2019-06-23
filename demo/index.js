@@ -14,9 +14,11 @@ function App() {
 
     return (
         <div style={{
-            margin: "30px auto",
-            width: 1400,
-            minHeight: 500
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
         }}>
             <FormDesigner
                 widgets={widgets}

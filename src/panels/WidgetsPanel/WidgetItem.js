@@ -9,18 +9,24 @@ import {
 } from '../../constants';
 
 const spec = {
-    beginDrag(props) {
+    beginDrag(props, monitor, component) {
+        const designer = props.designer;
         const widget = props.widget;
         const item = widget.getItem();
+        designer.addItem(item);
+        console.log(item)
+
         return {
-            isWidgetDragging: true,
+            // isWidgetDragging: true,
             widget,
             item,
         };
     },
-    // endDrag(props, monitor, component) {
-    //     console.log('endDrag')
-    // },
+    endDrag(props, monitor, component) {
+        const designer = props.designer;
+        designer.clearTmpItems();
+        console.log('endDrag')
+    },
     // canDrag(props) {
     //     return !props.disabled;
     // }

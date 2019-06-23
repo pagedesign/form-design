@@ -97,7 +97,7 @@
 
         .design-layout-container {
             width: 800px;
-            height: 600px;
+            height: 1600px;
             padding-bottom: 60px;
             margin: 0 auto;
             overflow: auto;
@@ -120,7 +120,7 @@
             }
 
             .drag-item-placeholder {
-                padding-top: 12px;
+                margin-top: 12px;
 
                 &-inner {
                     height: 46px;
@@ -129,7 +129,7 @@
             }
 
             .widget-preview-item-wrapper {
-                padding-top: 12px;
+                margin-top: 12px;
 
                 &.dragging {
                     opacity: 0.2;
@@ -213,17 +213,17 @@
                     }
 
                     &:hover {
-                        >.widget-preview-close {
+                        > .widget-preview-close {
                             display: block;
                         }
                     }
 
                     &-selected {
-                        >.widget-preview-item-inner {
+                        > .widget-preview-item-inner {
                             border: 1px solid #007ed3;
                         }
 
-                        >.widget-preview-close {
+                        > .widget-preview-close {
                             display: block;
                         }
                     }

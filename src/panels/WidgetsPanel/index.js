@@ -19,7 +19,11 @@ export default class WidgetsPanel extends React.Component {
                     {
                         widgets.map(widget => {
                             return (
-                                <WidgetItem key={widget.xtype} widget={widget} />
+                                <WidgetItem
+                                    designer={designer}
+                                    key={widget.xtype}
+                                    widget={widget}
+                                />
                             );
                         })
                     }

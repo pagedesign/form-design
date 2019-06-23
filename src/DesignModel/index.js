@@ -49,10 +49,6 @@ export default class DesignModel extends React.Component {
         return widgetsMap[xtype] || null;
     }
 
-    // isWidget(widget) {
-    //     return !!widget.$$widget;
-    // }
-
     getWidgets() {
         const { widgets } = this.state;
         return [].concat(widgets);
@@ -70,13 +66,11 @@ export default class DesignModel extends React.Component {
 
     getActiveItem() {
         const activeId = this.state.activeId;
-
         return this.getItem(activeId) || null;
     }
 
     getItems(pid = null) {
         const items = this.getAllItems();
-        // console.log(items, 'axxx')
         return items.filter(item => item.$pid == pid);
     }
 
@@ -97,7 +91,7 @@ export default class DesignModel extends React.Component {
             currentFieldId = pNode.$pid;
             if (!currentFieldId) break;
         }
-        // console.log(pids, 'pids');
+
         return pids;
     }
 
@@ -188,6 +182,45 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
+    clearTmpItems() {
+        const items = this.getAllItems();
+        const newItems = items.filter(item => !item.__tmp__);
+
+        this.onChange(newItems);
+    }
+
+    updateItemPid(item, pid = null) {
+        const items = this.getAllItems();
+        const fieldId = item.fieldId;
+        const idx = this.getItemIndex(fieldId);
+
+        if (idx !== -1) {
+            item.$pid = pid;
+            items[idx] = item;
+        }
+
+        this.onChange(items);
+    }
+
+    commitItem(item, pid = null) {
+        const items = this.getAllItems();
+        const fieldId = item.fieldId;
+        const idx = this.getItemIndex(fieldId);
+
+        if (idx !== -1) {
+            item.__tmp__ = false;
+            delete item.__tmp__;
+            item.$pid = pid;
+            items[idx] = item;
+        }
+
+        this.onChange(items);
+    }
+
+    isTmpItem(item) {
+        return !!item.__tmp__;
+    }
+
     getModel() {
         return {
             //   isWidget: this.isWidget.bind(this),
@@ -206,6 +239,11 @@ export default class DesignModel extends React.Component {
             getItem: this.getItem.bind(this),
             insertBefore: this.insertBefore.bind(this),
             insertAfter: this.insertAfter.bind(this),
+            clearTmpItems: this.clearTmpItems.bind(this),
+            commitItem: this.commitItem.bind(this),
+            isTmpItem: this.isTmpItem.bind(this),
+            updateItemPid: this.updateItemPid.bind(this),
+
         };
     }
 

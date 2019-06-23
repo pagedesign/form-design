@@ -13,31 +13,46 @@ import PreviewItem from './PreviewItem';
 
 const spec = {
     canDrop(props, monitor) {
+        return true;
         const dragItem = monitor.getItem();
         return dragItem.isWidgetDragging;
     },
-    // hover(props, monitor, component) {
-    //      if(!monitor.canDrop()) return;
-    //     const isOver = monitor.isOver({ shallow: true });
-    //     if (isOver) {
-    //         console.log('WidgetDropAccepter over...')
-    //     }
-    // },
+    hover(props, monitor, component) {
+        if (!monitor.canDrop()) return;
+        const isOver = monitor.isOver({ shallow: true });
+        if (isOver) {
+            const designer = component.context;
+            const pid = props.pid;
+            const dragItem = monitor.getItem();
+            const item = dragItem.item;
+
+            if (pid !== item.$pid) {
+                designer.updateItemPid(item, pid)
+                console.log('pid change\...')
+            }
+
+        }
+    },
     drop(props, monitor, component) {
-        if (monitor.didDrop()) {
-            // console.log('widget has did drop')
+        if (monitor.didDrop() || !monitor.canDrop()) {
+            console.log('widget has did drop')
             return;
         }
+        console.log('WidgetDropAccepter dropable')
         const dragItem = monitor.getItem();
         const designer = component.context;
-        console.log(props.pid)
-        designer.addItem(dragItem.item, props.pid);
+        console.log('drop', props.pid);
+        // if (designer.isTmpItem(dragItem.item)) {
+        // designer.addItem(dragItem.item, props.pid);
+        designer.commitItem(dragItem.item, props.pid)
+        // }
     }
 };
 
 const collect = (connect, monitor) => {
     return {
         connectDropTarget: connect.dropTarget(),
+        isHover: monitor.isOver(),
         isOver: monitor.isOver({ shallow: true }),
         canDrop: monitor.canDrop(),
         dragItem: monitor.getItem(),
@@ -62,7 +77,13 @@ class WidgetDropAccepter extends React.Component {
     }
 
     renderItem = (item, i) => {
+        const { isHover } = this.props;
         const designer = this.context;
+
+        if (!isHover && designer.isTmpItem(item)) {
+            return null;
+        }
+
         const xtype = item.xtype;
         const widget = designer.getWidget(xtype);
 
@@ -85,9 +106,9 @@ class WidgetDropAccepter extends React.Component {
                 {
                     items.map(this.renderItem)
                 }
-                {
+                {/* {
                     isOver && dragItem.isWidgetDragging ? this.rendrePlaceholder() : null
-                }
+                } */}
             </div>
         );
     }

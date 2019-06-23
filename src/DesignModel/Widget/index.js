@@ -43,6 +43,7 @@ export default class Widget {
             ...ret,
             xtype: this.xtype,
             __tmp__: true,
+            $pid: null,
         }
     }
 

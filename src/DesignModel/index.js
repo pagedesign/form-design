@@ -202,7 +202,7 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
-    commitItem(item, pid = null) {
+    commitItem(item) {
         const items = this.getAllItems();
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
@@ -210,7 +210,6 @@ export default class DesignModel extends React.Component {
         if (idx !== -1) {
             item.__tmp__ = false;
             delete item.__tmp__;
-            item.$pid = pid;
             items[idx] = item;
         }
 

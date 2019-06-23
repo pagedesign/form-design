@@ -11,14 +11,29 @@ import DesignContext from '../../DesignContext';
 
 import PreviewItem from './PreviewItem';
 
+function canDrop(props, monitor, component) {
+    const isOver = monitor.isOver({ shallow: true });
+    if (!isOver) return false;
+    //子容器拖动过程中不再接受释放处理
+    const designer = component.context;
+    const dragItem = monitor.getItem();
+    const pid = props.pid;
+    const dragItemFieldId = dragItem.item.fieldId;
+    const targetPids = pid ? designer.getPids(pid) : [];
+    pid && targetPids.push(pid);
+    // console.log(targetPids, dragItemFieldId, 'canDrop1')
+    //解决父节点拖动到子节点的情况
+    return targetPids.indexOf(dragItemFieldId) === -1;
+}
+
 const spec = {
     canDrop(props, monitor) {
         return true;
-        const dragItem = monitor.getItem();
-        return dragItem.isWidgetDragging;
+        // const dragItem = monitor.getItem();
+        // return dragItem.isWidgetDragging;
     },
     hover(props, monitor, component) {
-        if (!monitor.canDrop()) return;
+        if (!monitor.canDrop() || !canDrop(props, monitor, component)) return;
         const isOver = monitor.isOver({ shallow: true });
         if (isOver) {
             const designer = component.context;
@@ -27,25 +42,28 @@ const spec = {
             const item = dragItem.item;
 
             if (pid !== item.$pid) {
-                designer.updateItemPid(item, pid)
-                console.log('pid change\...')
+                designer.updateItemPid(item, pid);
             }
-
         }
     },
     drop(props, monitor, component) {
-        if (monitor.didDrop() || !monitor.canDrop()) {
-            console.log('widget has did drop')
-            return;
-        }
-        console.log('WidgetDropAccepter dropable')
         const dragItem = monitor.getItem();
         const designer = component.context;
-        console.log('drop', props.pid);
-        // if (designer.isTmpItem(dragItem.item)) {
-        // designer.addItem(dragItem.item, props.pid);
-        designer.commitItem(dragItem.item, props.pid)
+        //根节点统一commit
+        // monitor.canDrop() &&
+        if (props.pid == null) {
+            designer.commitItem(dragItem.item);
+        }
+
+        // if (monitor.didDrop() || !canDrop(props, monitor, component)) {
+        //     return;
         // }
+
+        // const dragItem = monitor.getItem();
+        // const designer = component.context;
+        // console.log('drop', props.pid);
+        // designer.commitItem(dragItem.item, props.pid)
+
     }
 };
 
@@ -79,24 +97,48 @@ class WidgetDropAccepter extends React.Component {
     renderItem = (item, i) => {
         const { isHover } = this.props;
         const designer = this.context;
-
-        if (!isHover && designer.isTmpItem(item)) {
-            return null;
-        }
+        const shouldHide = !isHover && designer.isTmpItem(item)
 
         const xtype = item.xtype;
         const widget = designer.getWidget(xtype);
 
-        return <PreviewItem designer={designer} key={item.fieldId} widget={widget} item={item} />
+        return (
+            <PreviewItem
+                designer={designer}
+                key={item.fieldId}
+                widget={widget}
+                item={item}
+                visible={!shouldHide}
+            />
+        )
     }
+
+    // connectDropTarget = (dom) => {
+    //     const { connectDropTarget, pid } = this.props;
+    //     const designer = this.context;
+
+    //     if (pid) {
+    //         const pItem = designer.getItem(pid);
+    //         if (!designer.isTmpItem(pItem)) {
+    //             connectDropTarget(dom);
+    //         } else {
+    //             const tmpDOM = document.createElement('div');
+    //             connectDropTarget(tmpDOM);
+    //             console.log('x')
+    //         }
+    //     } else {
+    //         connectDropTarget(dom);
+    //     }
+    // }
 
     render() {
         const { connectDropTarget, isOver, canDrop, dragItem, items, style = {} } = this.props;
         // const designer = this.context;
         // const items = designer.getItems(pid);
 
-        return connectDropTarget(
+        return (
             <div
+                ref={connectDropTarget}
                 style={style}
                 className={cx({
                     "design-layout-container": true,

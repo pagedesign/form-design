@@ -134,8 +134,8 @@ export default class DesignModel extends React.Component {
         this.onChange(ret);
     }
 
-    getItemIndex(fieldId) {
-        const items = this.getAllItems();
+    getItemIndex(fieldId, items) {
+        items = items || this.getAllItems();
         return findIndex(items, item => item.fieldId === fieldId)
     }
 
@@ -147,6 +147,15 @@ export default class DesignModel extends React.Component {
     insertBefore(item, fieldId) {
         const items = this.getAllItems();
 
+        //判断是否需要移动
+        const _idx = this.getItemIndex(fieldId);
+        if (_idx !== 0) {
+            const prevItem = items[_idx - 1];
+            if (prevItem.fieldId === item.fieldId) {
+                return;
+            }
+        }
+
         //判断当前item是否已经存在, 如果存在则先删除
         const oIdx = this.getItemIndex(item.fieldId);
         if (oIdx > -1) {
@@ -157,7 +166,7 @@ export default class DesignModel extends React.Component {
         item.$pid = bItem.$pid;
 
         //插入操作
-        const idx = this.getItemIndex(fieldId);
+        const idx = this.getItemIndex(fieldId, items);
         items.splice(idx, 0, item);
 
         this.onChange(items);
@@ -165,6 +174,15 @@ export default class DesignModel extends React.Component {
 
     insertAfter(item, fieldId) {
         const items = this.getAllItems();
+
+        //判断是否需要移动
+        const _idx = this.getItemIndex(fieldId);
+        if (_idx !== (items.length - 1)) {
+            const nextItem = items[_idx + 1];
+            if (nextItem.fieldId === item.fieldId) {
+                return;
+            }
+        }
 
         //判断当前item是否已经存在, 如果存在则先删除
         const oIdx = this.getItemIndex(item.fieldId);

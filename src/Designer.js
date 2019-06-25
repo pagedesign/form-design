@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { DndProvider } from 'react-dnd';
+import HTML5Backend from 'react-dnd-html5-backend';
 
 import DesignModel from './DesignModel';
 import WidgetsPanel from './panels/WidgetsPanel';
@@ -41,20 +43,22 @@ export default class Designer extends React.Component {
         const { widgets, metadata, platform } = this.props;
 
         return (
-            <DesignModel
-                widgets={widgets}
-                items={metadata.items}
-                platform={platform}
-                onChange={this.handleModelChange}
-            >
-                <div className="csos-form-designer">
-                    <div className="csos-form-designer-container">
-                        <WidgetsPanel />
-                        <DesignPanel />
-                        <PropertyPanel />
+            <DndProvider backend={HTML5Backend}>
+                <DesignModel
+                    widgets={widgets}
+                    items={metadata.items}
+                    platform={platform}
+                    onChange={this.handleModelChange}
+                >
+                    <div className="csos-form-designer">
+                        <div className="csos-form-designer-container">
+                            <WidgetsPanel />
+                            <DesignPanel />
+                            <PropertyPanel />
+                        </div>
                     </div>
-                </div>
-            </DesignModel>
+                </DesignModel>
+            </DndProvider>
         )
     }
 }

@@ -85,7 +85,6 @@ const dropSpec = {
             if (item.fieldId === dragItemFieldId) {
                 return;
             } else {
-                // console.log(dragItem.item, item.fieldId, 'crash1')
                 const targetOffset = previewDOM.querySelector('.widget-preview-item').getBoundingClientRect();
                 const middleY = targetOffset.bottom - (targetOffset.height / 2);
                 if (dragOffset.y <= middleY) {

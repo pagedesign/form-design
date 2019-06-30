@@ -212,6 +212,8 @@ export default class DesignModel extends React.Component {
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
 
+        if (item.$pid === pid) return;
+
         if (idx !== -1) {
             item.$pid = pid;
             items[idx] = item;
@@ -243,7 +245,6 @@ export default class DesignModel extends React.Component {
 
     getModel() {
         return {
-            //   isWidget: this.isWidget.bind(this),
             getWidget: this.getWidget.bind(this),
             getWidgets: this.getWidgets.bind(this),
             setActiveId: this.setActiveId.bind(this),
@@ -263,7 +264,6 @@ export default class DesignModel extends React.Component {
             commitItem: this.commitItem.bind(this),
             isTmpItem: this.isTmpItem.bind(this),
             updateItemPid: this.updateItemPid.bind(this),
-
         };
     }
 

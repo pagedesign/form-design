@@ -1,16 +1,17 @@
 
-import React from 'react';
 import { isValidElementType } from 'react-is';
 import WPreview from './Preview';
 import WDragPreview from './DragPreview';
 import WPlaceholderPreview from './PlaceholderPreview';
 import WWidgetProperty from './WidgetProperty';
 
+let fid = 1000;
+
 export default class Widget {
     /**
          *
          * @param {object} options 控件基本信息: 名称 图标 属性面板组件 预览组件 属性等
-         * @param {string} optopns.xtype 控件ID
+         * @param {string} optopns.xtype 控件类
          * @param {string} optopns.title 控件名称
          * @param {string} optopns.icon  控件图标
          * @param {ReactElementType} optopns.Preview  控件拖放后预览组件
@@ -40,10 +41,11 @@ export default class Widget {
         const ret = typeof data === 'function' ? data() : data;
 
         return {
+            fieldId: `f_${Date.now()}_${fid++}`,
             ...ret,
             xtype: this.xtype,
-            __tmp__: true,
             $pid: null,
+            __tmp__: true,
         }
     }
 

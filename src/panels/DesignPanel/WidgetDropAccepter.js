@@ -12,8 +12,6 @@ import DesignContext from '../../DesignContext';
 import PreviewItem from './PreviewItem';
 
 function canDrop(props, monitor, component) {
-    const isOver = monitor.isOver({ shallow: true });
-    if (!isOver) return false;
     //子容器拖动过程中不再接受释放处理
     const designer = component.context;
     const dragItem = monitor.getItem();
@@ -21,7 +19,6 @@ function canDrop(props, monitor, component) {
     const dragItemFieldId = dragItem.item.fieldId;
     const targetPids = pid ? designer.getPids(pid) : [];
     pid && targetPids.push(pid);
-    // console.log(targetPids, dragItemFieldId, 'canDrop1')
     //解决父节点拖动到子节点的情况
     return targetPids.indexOf(dragItemFieldId) === -1;
 }
@@ -29,40 +26,28 @@ function canDrop(props, monitor, component) {
 const spec = {
     canDrop(props, monitor) {
         return true;
-        // const dragItem = monitor.getItem();
-        // return dragItem.isWidgetDragging;
     },
     hover(props, monitor, component) {
-        if (!monitor.canDrop() || !canDrop(props, monitor, component)) return;
         const isOver = monitor.isOver({ shallow: true });
-        if (isOver) {
-            const designer = component.context;
-            const pid = props.pid;
-            const dragItem = monitor.getItem();
-            const item = dragItem.item;
+        if (!isOver) return;
 
-            if (pid !== item.$pid) {
-                designer.updateItemPid(item, pid);
-            }
-        }
+        if (!monitor.canDrop() || !canDrop(props, monitor, component)) return;
+
+        const designer = component.context;
+        const pid = props.pid;
+        const dragItem = monitor.getItem();
+        const item = dragItem.item;
+
+        designer.updateItemPid(item, pid);
     },
     drop(props, monitor, component) {
         const dragItem = monitor.getItem();
         const designer = component.context;
+
         //根节点统一commit
-        // monitor.canDrop() &&
         if (props.pid == null) {
             designer.commitItem(dragItem.item);
         }
-
-        // if (monitor.didDrop() || !canDrop(props, monitor, component)) {
-        //     return;
-        // }
-
-        // const dragItem = monitor.getItem();
-        // const designer = component.context;
-        // console.log('drop', props.pid);
-        // designer.commitItem(dragItem.item, props.pid)
 
     }
 };

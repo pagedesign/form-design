@@ -1,7 +1,6 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import flow from 'lodash/flow';
-import get from 'lodash/get';
 import {
     DragSource,
     DropTarget,
@@ -11,8 +10,6 @@ import {
     WIDGET_DRAG_DROP_SCOPE
 } from '../../constants';
 import DesignContext from '../../DesignContext';
-
-import canDrop from './canDrop';
 
 const dragSpec = {
     beginDrag(props) {
@@ -37,72 +34,53 @@ const dragCollect = (connect, monitor) => {
     };
 }
 
-// function canDrop(props, monitor) {
-//     const designer = props.designer;
-//     const dragItem = monitor.getItem();
-//     const dragItemFieldId = dragItem.item.fieldId;
-//     const targetFieldId = props.item.fieldId;
-//     const pids = designer.getPids(targetFieldId);
-//     console.log(targetFieldId, 'pids: ', pids, dragItemFieldId);
-//     //解决父节点拖动到子节点的情况
-//     if (pids.indexOf(dragItemFieldId) > -1) return false;
+function canDrop(props, monitor) {
+    const designer = props.designer;
+    const dragItem = monitor.getItem();
+    const dragItemFieldId = dragItem.item.fieldId;
+    const targetFieldId = props.item.fieldId;
 
-//     return targetFieldId !== dragItemFieldId;
-// }
+    //解决父节点拖动到子节点的情况
+    const pids = designer.getPids(targetFieldId);
+
+    pids.push(targetFieldId);
+
+    if (pids.indexOf(dragItemFieldId) > -1) return false;
+
+    return true;
+}
 
 const dropSpec = {
     canDrop(props, monitor) {
         return true;
-        // const designer = props.designer;
-        // const dragItem = monitor.getItem();
-        // // if (dragItem.isWidgetDragging) return true;
-        // const dragItemFieldId = dragItem.item.fieldId;
-        // const targetFieldId = props.item.fieldId; //currentFieldId;
-        // const pids = designer.getPids(targetFieldId);
-        // console.log(targetFieldId, 'pids: ', pids, dragItemFieldId);
-        // //解决父节点拖动到子节点的情况
-        // if (pids.indexOf(dragItemFieldId) > -1) return false;
-
-        // return targetFieldId !== dragItemFieldId;
     },
 
     hover(props, monitor, component) {
-        if (!canDrop(props, monitor, component)) return;
-
         const isOver = monitor.isOver({ shallow: true });
         if (!isOver) return;
+
+        if (!monitor.canDrop() || !canDrop(props, monitor, component)) return;
 
         const designer = component.context;
         const { item } = props;
         const dragItem = monitor.getItem();
-        const dragItemFieldId = dragItem.item.fieldId;
-        const isSortMode = true;
         const dragOffset = monitor.getClientOffset();
         const previewDOM = findDOMNode(component);
 
-        if (isSortMode) {
-            //顺序调整模式
-            if (item.fieldId === dragItemFieldId) {
-                return;
-            } else {
-                const targetOffset = previewDOM.getBoundingClientRect();
-                const middleY = targetOffset.bottom - (targetOffset.height / 2);
-                if (dragOffset.y <= middleY) {
-                    designer.insertBefore(dragItem.item, item.fieldId);
-                } else {
-                    designer.insertAfter(dragItem.item, item.fieldId);
-                }
-            }
-
+        //顺序调整
+        const targetOffset = previewDOM.getBoundingClientRect();
+        const middleY = targetOffset.bottom - (targetOffset.height / 2);
+        if (dragOffset.y <= middleY) {
+            designer.insertBefore(dragItem.item, item.fieldId);
+        } else {
+            designer.insertAfter(dragItem.item, item.fieldId);
         }
 
     },
 
-    drop(props, monitor, component) {
-        if (monitor.didDrop() || !canDrop(props, monitor, component)) {
-            return;
-        }
-    }
+    // drop(props, monitor, component) {
+    //     //TODO
+    // }
 };
 
 const dropCollect = (connect, monitor) => {
@@ -110,7 +88,7 @@ const dropCollect = (connect, monitor) => {
         connectDropTarget: connect.dropTarget(),
         isOver: monitor.isOver({ shallow: true }),
         canDrop: monitor.canDrop(),
-        dragItem: monitor.getItem(),
+        // dragItem: monitor.getItem(),
     }
 }
 
@@ -145,14 +123,14 @@ class WidgetPreviewItem extends React.Component {
             isOver,
             widget,
             item,
-            dragItem,
+            // dragItem,
             visible,
         } = this.props;
         // const { placeholderPosition } = this.state;
         const designer = this.context;
         const activeId = designer.getActiveId();
         //如果来源不是组建面板,则是排序模式
-        const isSortMode = dragItem && !dragItem.isWidgetDragging;
+        // const isSortMode = dragItem && !dragItem.isWidgetDragging;
         // const items = layout.getLayoutChildren(data.id);
 
         return connectDropTarget(
@@ -170,7 +148,6 @@ class WidgetPreviewItem extends React.Component {
                 }}
 
             >
-                {/* {placeholderPosition === 'top' && isOver && !isSortMode ? <widget.PlaceholderPreview /> : null} */}
                 <div
                     ref={connectDragSource}
                     className={cx({
@@ -182,7 +159,6 @@ class WidgetPreviewItem extends React.Component {
                     <widget.Preview item={item} designer={designer} />
                     <span className="widget-preview-close" onClick={this.handleRemove}>x</span>
                 </div>
-                {/* {placeholderPosition === 'bottom' && isOver && !isSortMode ? <widget.PlaceholderPreview /> : null} */}
             </div>
         );
     }

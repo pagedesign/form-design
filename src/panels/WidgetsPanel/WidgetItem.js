@@ -14,10 +14,8 @@ const spec = {
         const widget = props.widget;
         const item = widget.getItem();
         designer.addItem(item);
-        console.log(item)
 
         return {
-            // isWidgetDragging: true,
             widget,
             item,
         };
@@ -25,7 +23,6 @@ const spec = {
     endDrag(props, monitor, component) {
         const designer = props.designer;
         designer.clearTmpItems();
-        console.log('endDrag')
     },
     // canDrag(props) {
     //     return !props.disabled;

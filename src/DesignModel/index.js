@@ -229,6 +229,9 @@ export default class DesignModel extends React.Component {
             item.__tmp__ = false;
             delete item.__tmp__;
             items[idx] = item;
+            this.setState({
+                activeId: item.fieldId,
+            });
         }
 
         this.onChange(items);

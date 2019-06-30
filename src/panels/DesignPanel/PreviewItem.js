@@ -115,6 +115,17 @@ class WidgetPreviewItem extends React.Component {
         designer.removeItem(item.fieldId)
     }
 
+    handleDragAndDrop = (dom) => {
+        const {
+            connectDropTarget,
+            connectDragSource,
+        } = this.props;
+
+        connectDropTarget(dom);
+        connectDragSource(dom);
+
+    }
+
     render() {
         const {
             connectDropTarget,
@@ -133,8 +144,9 @@ class WidgetPreviewItem extends React.Component {
         // const isSortMode = dragItem && !dragItem.isWidgetDragging;
         // const items = layout.getLayoutChildren(data.id);
 
-        return connectDropTarget(
+        return (
             <div
+                ref={this.handleDragAndDrop}
                 className={cx({
                     "widget-preview-item-wrapper": true,
                     "droppable": isOver,
@@ -149,7 +161,6 @@ class WidgetPreviewItem extends React.Component {
 
             >
                 <div
-                    ref={connectDragSource}
                     className={cx({
                         "widget-preview-item": true,
                         "widget-preview-item-selected": activeId === item.fieldId,

@@ -69,7 +69,8 @@ const dropSpec = {
 
         //顺序调整
         const targetOffset = previewDOM.getBoundingClientRect();
-        const middleY = targetOffset.bottom - (targetOffset.height / 2);
+        const middleY = ~~(targetOffset.bottom - (targetOffset.height / 2));
+
         if (dragOffset.y <= middleY) {
             designer.insertBefore(dragItem.item, item.fieldId);
         } else {

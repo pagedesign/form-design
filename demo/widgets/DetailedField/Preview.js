@@ -12,7 +12,6 @@ export default function (props) {
         [props.className]: props.className
     });
     const items = designer.getItems(item.fieldId);
-    console.log(item.fieldId, items, designer.getAllItems(), 'xxx')
 
     return (
         <div

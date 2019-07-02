@@ -46,7 +46,15 @@ export default class DesignModel extends React.Component {
 
     getWidget(xtype) {
         const { widgetsMap } = this.state;
-        return widgetsMap[xtype] || null;
+        let widget = widgetsMap[xtype];
+
+        if (!widget) {
+            widget = new Widget({
+                xtype,
+                title: xtype,
+            });
+        }
+        return widget;
     }
 
     getWidgets() {

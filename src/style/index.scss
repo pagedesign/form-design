@@ -141,6 +141,7 @@
                     font-size: 14px;
                     display: block;
                     margin-bottom: 1px;
+                    border: 1px solid #d8d8d8;
 
                     &:before {
                         content: "";
@@ -213,17 +214,17 @@
                     }
 
                     &:hover {
-                        > .widget-preview-close {
+                        >.widget-preview-close {
                             display: block;
                         }
                     }
 
                     &-selected {
-                        > .widget-preview-item-inner {
+                        >.widget-preview-item-inner {
                             border: 1px solid #007ed3;
                         }
 
-                        > .widget-preview-close {
+                        >.widget-preview-close {
                             display: block;
                         }
                     }

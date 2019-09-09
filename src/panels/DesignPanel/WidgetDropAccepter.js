@@ -1,15 +1,10 @@
-import React from 'react';
-import {
-    DragSource,
-    DropTarget,
-} from 'react-dnd';
-import cx from 'classnames';
-import {
-    WIDGET_DRAG_DROP_SCOPE
-} from '../../constants';
-import DesignContext from '../../DesignContext';
+import React from "react";
+import { DragSource, DropTarget } from "react-dnd";
+import cx from "classnames";
+import { WIDGET_DRAG_DROP_SCOPE } from "../../constants";
+import DesignContext from "../../DesignContext";
 
-import PreviewItem from './PreviewItem';
+import PreviewItem from "./PreviewItem";
 
 function canDrop(props, monitor, component) {
     //子容器拖动过程中不再接受释放处理
@@ -48,7 +43,6 @@ const spec = {
         if (props.pid == null) {
             designer.commitItem(dragItem.item);
         }
-
     }
 };
 
@@ -58,31 +52,28 @@ const collect = (connect, monitor) => {
         isHover: monitor.isOver(),
         isOver: monitor.isOver({ shallow: true }),
         canDrop: monitor.canDrop(),
-        dragItem: monitor.getItem(),
-    }
-}
+        dragItem: monitor.getItem()
+    };
+};
 
 class WidgetDropAccepter extends React.Component {
-
     static contextType = DesignContext;
 
     static defaultProps = {
-        pid: null,
-    }
+        pid: null
+    };
 
     rendrePlaceholder() {
         const { dragItem } = this.props;
-        const { widget, item } = dragItem
+        const { widget, item } = dragItem;
 
-        return (
-            <widget.PlaceholderPreview widget={widget} item={item} />
-        );
+        return <widget.PlaceholderPreview widget={widget} item={item} />;
     }
 
     renderItem = (item, i) => {
         const { isHover } = this.props;
         const designer = this.context;
-        const shouldHide = !isHover && designer.isTmpItem(item)
+        const shouldHide = !isHover && designer.isTmpItem(item);
 
         const xtype = item.xtype;
         const widget = designer.getWidget(xtype);
@@ -95,8 +86,8 @@ class WidgetDropAccepter extends React.Component {
                 item={item}
                 visible={!shouldHide}
             />
-        )
-    }
+        );
+    };
 
     // connectDropTarget = (dom) => {
     //     const { connectDropTarget, pid } = this.props;
@@ -117,7 +108,14 @@ class WidgetDropAccepter extends React.Component {
     // }
 
     render() {
-        const { connectDropTarget, isOver, canDrop, dragItem, items, style = {} } = this.props;
+        const {
+            connectDropTarget,
+            isOver,
+            canDrop,
+            dragItem,
+            items,
+            style = {}
+        } = this.props;
         // const designer = this.context;
         // const items = designer.getItems(pid);
 
@@ -128,11 +126,10 @@ class WidgetDropAccepter extends React.Component {
                 className={cx({
                     "design-layout-container": true,
                     "drag-over": isOver,
-                    "dropable": canDrop,
-                })}>
-                {
-                    items.map(this.renderItem)
-                }
+                    dropable: canDrop
+                })}
+            >
+                {items.map(this.renderItem)}
                 {/* {
                     isOver && dragItem.isWidgetDragging ? this.rendrePlaceholder() : null
                 } */}
@@ -141,4 +138,6 @@ class WidgetDropAccepter extends React.Component {
     }
 }
 
-export default DropTarget(WIDGET_DRAG_DROP_SCOPE, spec, collect)(WidgetDropAccepter);
+export default DropTarget(WIDGET_DRAG_DROP_SCOPE, spec, collect)(
+    WidgetDropAccepter
+);

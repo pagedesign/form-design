@@ -1,13 +1,12 @@
-import React from 'react';
-import DesignContext from '../DesignContext';
-import Widget from './Widget';
+import React from "react";
+import DesignContext from "../DesignContext";
+import Widget from "./Widget";
 
-import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
+import find from "lodash/find";
+import findIndex from "lodash/findIndex";
 
 export default class DesignModel extends React.Component {
     static getDerivedStateFromProps(props, state) {
-
         const widgetsMap = {};
         const widgets = props.widgets.map(widget => {
             const w = new Widget(widget);
@@ -18,22 +17,22 @@ export default class DesignModel extends React.Component {
         return {
             widgets,
             widgetsMap,
-            items: props.items || [],
-        }
+            items: props.items || []
+        };
     }
 
     static defaultProps = {
         onChange: null,
         widgets: [],
-        items: [],
-    }
+        items: []
+    };
 
     state = {
         widgets: [],
         widgetsMap: {},
         items: [],
         activeId: null
-    }
+    };
 
     onChange(items) {
         const props = this.props;
@@ -51,7 +50,7 @@ export default class DesignModel extends React.Component {
         if (!widget) {
             widget = new Widget({
                 xtype,
-                title: xtype,
+                title: xtype
             });
         }
         return widget;
@@ -79,7 +78,14 @@ export default class DesignModel extends React.Component {
 
     getItems(pid = null) {
         const items = this.getAllItems();
-        return items.filter(item => item.$pid == pid);
+
+        return items.filter(item => item && item.$pid == pid);
+    }
+
+    getChildren(fieldId = null) {
+        const { items } = this.state;
+
+        return items.filter(item => item.$pid == fieldId);
     }
 
     getAllItems() {
@@ -94,7 +100,7 @@ export default class DesignModel extends React.Component {
 
         let currentFieldId = node.$pid;
         let pNode;
-        while (pNode = this.getItem(currentFieldId)) {
+        while ((pNode = this.getItem(currentFieldId))) {
             pids.push(pNode.fieldId);
             currentFieldId = pNode.$pid;
             if (!currentFieldId) break;
@@ -144,12 +150,12 @@ export default class DesignModel extends React.Component {
 
     getItemIndex(fieldId, items) {
         items = items || this.getAllItems();
-        return findIndex(items, item => item.fieldId === fieldId)
+        return findIndex(items, item => item.fieldId === fieldId);
     }
 
     getItem(fieldId) {
         const items = this.getAllItems();
-        return find(items, item => item.fieldId === fieldId)
+        return find(items, item => item && item.fieldId === fieldId);
     }
 
     insertBefore(item, fieldId) {
@@ -185,7 +191,7 @@ export default class DesignModel extends React.Component {
 
         //判断是否需要移动
         const _idx = this.getItemIndex(fieldId);
-        if (_idx !== (items.length - 1)) {
+        if (_idx !== items.length - 1) {
             const nextItem = items[_idx + 1];
             if (nextItem.fieldId === item.fieldId) {
                 return;
@@ -216,7 +222,7 @@ export default class DesignModel extends React.Component {
     }
 
     updateItemPid(item, pid = null) {
-        const items = this.getAllItems();
+        // const items = this.getAllItems();
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
 
@@ -224,10 +230,32 @@ export default class DesignModel extends React.Component {
 
         if (idx !== -1) {
             item.$pid = pid;
-            items[idx] = item;
+            // items[idx] = item;
         }
 
-        this.onChange(items);
+        //fix: 子节点顺序
+        if (pid) {
+            const pidIndex = this.getItemIndex(pid);
+            const childs = this.getChildren(pid);
+
+            if (childs.length) {
+                const firstItem = childs[0];
+                const lastItem = childs[childs.length - 1];
+
+                if (idx > pidIndex) {
+                    console.log("insertAfter", item, lastItem.fieldId);
+                    this.insertAfter(item, lastItem.fieldId);
+                } else {
+                    this.insertBefore(item, firstItem.fieldId);
+
+                    console.log("insertBefore", item, firstItem.fieldId);
+                }
+                return;
+            }
+        }
+
+        this.onChange(this.getAllItems());
+        // this.onChange(items);
     }
 
     commitItem(item) {
@@ -240,7 +268,7 @@ export default class DesignModel extends React.Component {
             delete item.__tmp__;
             items[idx] = item;
             this.setState({
-                activeId: item.fieldId,
+                activeId: item.fieldId
             });
         }
 
@@ -271,7 +299,7 @@ export default class DesignModel extends React.Component {
             clearTmpItems: this.clearTmpItems.bind(this),
             commitItem: this.commitItem.bind(this),
             isTmpItem: this.isTmpItem.bind(this),
-            updateItemPid: this.updateItemPid.bind(this),
+            updateItemPid: this.updateItemPid.bind(this)
         };
     }
 
@@ -281,6 +309,6 @@ export default class DesignModel extends React.Component {
             <DesignContext.Provider value={this.getModel()}>
                 {children}
             </DesignContext.Provider>
-        )
+        );
     }
 }

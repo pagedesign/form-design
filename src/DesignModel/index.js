@@ -82,9 +82,7 @@ export default class DesignModel extends React.Component {
         return items.filter(item => item && item.$pid == pid);
     }
 
-    getChildren(fieldId = null) {
-        const { items } = this.state;
-
+    getChildren(fieldId = null, items = this.state.items) {
         return items.filter(item => item.$pid == fieldId);
     }
 
@@ -160,12 +158,16 @@ export default class DesignModel extends React.Component {
 
     insertBefore(item, fieldId) {
         const items = this.getAllItems();
+        const bItem = this.getItem(fieldId);
 
         //判断是否需要移动
         const _idx = this.getItemIndex(fieldId);
         if (_idx !== 0) {
             const prevItem = items[_idx - 1];
-            if (prevItem.fieldId === item.fieldId) {
+            if (
+                prevItem.fieldId === item.fieldId &&
+                prevItem.$pid === bItem.$pid
+            ) {
                 return;
             }
         }
@@ -176,7 +178,6 @@ export default class DesignModel extends React.Component {
             items.splice(oIdx, 1);
         }
 
-        const bItem = this.getItem(fieldId);
         item.$pid = bItem.$pid;
 
         //插入操作
@@ -188,12 +189,16 @@ export default class DesignModel extends React.Component {
 
     insertAfter(item, fieldId) {
         const items = this.getAllItems();
+        const prevItem = this.getItem(fieldId);
 
         //判断是否需要移动
         const _idx = this.getItemIndex(fieldId);
         if (_idx !== items.length - 1) {
             const nextItem = items[_idx + 1];
-            if (nextItem.fieldId === item.fieldId) {
+            if (
+                nextItem.fieldId === item.fieldId &&
+                nextItem.$pid === prevItem.$pid
+            ) {
                 return;
             }
         }
@@ -204,7 +209,6 @@ export default class DesignModel extends React.Component {
             items.splice(oIdx, 1);
         }
 
-        const prevItem = this.getItem(fieldId);
         item.$pid = prevItem.$pid;
 
         //插入操作 之前有删除操作, 要重新查找index
@@ -222,18 +226,12 @@ export default class DesignModel extends React.Component {
     }
 
     updateItemPid(item, pid = null) {
-        // const items = this.getAllItems();
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
 
         if (item.$pid === pid) return;
 
-        if (idx !== -1) {
-            item.$pid = pid;
-            // items[idx] = item;
-        }
-
-        //fix: 子节点顺序
+        //fix: 同级节点转变为子节点时顺序问题
         if (pid) {
             const pidIndex = this.getItemIndex(pid);
             const childs = this.getChildren(pid);
@@ -243,19 +241,19 @@ export default class DesignModel extends React.Component {
                 const lastItem = childs[childs.length - 1];
 
                 if (idx > pidIndex) {
-                    console.log("insertAfter", item, lastItem.fieldId);
                     this.insertAfter(item, lastItem.fieldId);
                 } else {
                     this.insertBefore(item, firstItem.fieldId);
-
-                    console.log("insertBefore", item, firstItem.fieldId);
                 }
                 return;
             }
         }
 
+        if (idx !== -1) {
+            item.$pid = pid;
+        }
+
         this.onChange(this.getAllItems());
-        // this.onChange(items);
     }
 
     commitItem(item) {

@@ -17,13 +17,17 @@ class DropItem extends React.Component {
     getDragOptions() {
         const designer = React.useContext(DesignerContext);
 
-        return {};
+        return {
+            item: {
+                type: designer.getScope()
+            }
+        };
     }
 
     render() {
         const { children } = this.props;
         invariant(
-            typeof children !== "function",
+            typeof children === "function",
             "DropItem children must be function!"
         );
 

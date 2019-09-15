@@ -37,7 +37,7 @@
         "prop-types": "^15.7.2",
         "react": "^16.8.6",
         "react-dnd": "^9.3.4",
-        "react-dnd-html5-backend": "^7.4.4",
+        "react-dnd-html5-backend": "^9.3.4",
         "react-dom": "^16.8.6",
         "react-is": "^16.8.6",
         "warning": "^4.0.3",
@@ -67,6 +67,7 @@
         "postcss-preset-env": "^6.6.0",
         "sass-loader": "^7.1.0",
         "style-loader": "^0.23.1",
+        "styled-components": "^4.3.2",
         "transform-es": "^2.3.0"
     },
     "browserslist": [

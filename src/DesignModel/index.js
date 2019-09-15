@@ -1,5 +1,5 @@
 import React from "react";
-import DesignContext from "../DesignContext";
+import DesignerContext from "../DesignerContext";
 import Widget from "./Widget";
 
 import find from "lodash/find";
@@ -7,21 +7,24 @@ import findIndex from "lodash/findIndex";
 
 export default class DesignModel extends React.Component {
     static getDerivedStateFromProps(props, state) {
-        const widgetsMap = {};
-        const widgets = props.widgets.map(widget => {
-            const w = new Widget(widget);
-            widgetsMap[widget.xtype] = w;
-            return w;
-        });
+        // const widgetsMap = {};
+        // const widgets = props.widgets.map(widget => {
+        //     const w = new Widget(widget);
+        //     widgetsMap[widget.xtype] = w;
+        //     return w;
+        // });
 
         return {
-            widgets,
-            widgetsMap,
+            // widgets,
+            // widgetsMap,
             items: props.items || []
         };
     }
 
     static defaultProps = {
+        scope: Math.random()
+            .toString(16)
+            .slice(2, 8),
         onChange: null,
         widgets: [],
         items: []
@@ -43,22 +46,27 @@ export default class DesignModel extends React.Component {
         }
     }
 
-    getWidget(xtype) {
-        const { widgetsMap } = this.state;
-        let widget = widgetsMap[xtype];
+    // getWidget(xtype) {
+    //     const { widgetsMap } = this.state;
+    //     let widget = widgetsMap[xtype];
 
-        if (!widget) {
-            widget = new Widget({
-                xtype,
-                title: xtype
-            });
-        }
-        return widget;
-    }
+    //     if (!widget) {
+    //         widget = new Widget({
+    //             xtype,
+    //             title: xtype
+    //         });
+    //     }
+    //     return widget;
+    // }
 
-    getWidgets() {
-        const { widgets } = this.state;
-        return [].concat(widgets);
+    // getWidgets() {
+    //     const { widgets } = this.state;
+    //     return [].concat(widgets);
+    // }
+
+    getScope() {
+        const props = this.props;
+        return props.scope;
     }
 
     setActiveId(activeId) {
@@ -279,8 +287,9 @@ export default class DesignModel extends React.Component {
 
     getModel() {
         return {
-            getWidget: this.getWidget.bind(this),
-            getWidgets: this.getWidgets.bind(this),
+            // getWidget: this.getWidget.bind(this),
+            // getWidgets: this.getWidgets.bind(this),
+            getScope: this.getScope.bind(this),
             setActiveId: this.setActiveId.bind(this),
             getActiveId: this.getActiveId.bind(this),
             getActiveItem: this.getActiveItem.bind(this),
@@ -304,9 +313,9 @@ export default class DesignModel extends React.Component {
     render() {
         const { children } = this.props;
         return (
-            <DesignContext.Provider value={this.getModel()}>
+            <DesignerContext.Provider value={this.getModel()}>
                 {children}
-            </DesignContext.Provider>
+            </DesignerContext.Provider>
         );
     }
 }

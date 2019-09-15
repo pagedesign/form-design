@@ -1,15 +1,15 @@
-import { uuid } from '../../utils';
+import { uuid } from "../../utils";
 
 export default () => {
     return {
         $pid: null,
         fieldId: uuid(),
-        fieldName: 'field_' + uuid(),
+        fieldName: "field_" + uuid(),
         placeholder: "请输入",
-        dataType: 'varchar',
-        dataLength: '255',
-        required: '0',
-        defaultValue: '',
-        width: '100%',
-    }
-}
+        dataType: "varchar",
+        dataLength: "255",
+        required: "0",
+        defaultValue: "",
+        width: "100%"
+    };
+};

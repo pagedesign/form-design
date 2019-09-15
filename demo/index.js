@@ -1,32 +1,95 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-import FormDesigner from '../src';
+// import styled from "styled-components";
 
-import widgets from './widgets';
+import { DesignerProvider, WidgetItem, DropContainer, DropItem } from "../src";
 
-import '../src/style';
+import widgets from "./widgets";
+
+import "../src/style";
+
+// const Container = styled.div``;
 
 function App() {
     const [metadata, onMetadataChange] = React.useState({
         items: []
-    })
+    });
+
+    console.log("items,", metadata);
 
     return (
-        <div style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-        }}>
-            <FormDesigner
-                widgets={widgets}
-                metadata={metadata}
-                onChange={onMetadataChange}
-            />
-        </div>
+        <DesignerProvider metadata={metadata} onChange={onMetadataChange}>
+            <div
+                style={{
+                    display: "flex",
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }}>
+                <div
+                    style={{
+                        width: 240,
+                        flex: "none"
+                    }}>
+                    {widgets.map(widget => {
+                        return (
+                            <WidgetItem
+                                getInstance={() => ({
+                                    ...widget.data(),
+                                    __tmp__: true
+                                })}>
+                                {connect => {
+                                    return (
+                                        <div
+                                            style={{
+                                                height: 32,
+                                                lineHeight: `32px`,
+                                                padding: "0 20px"
+                                            }}
+                                            ref={connect}>
+                                            {widget.title}
+                                        </div>
+                                    );
+                                }}
+                            </WidgetItem>
+                        );
+                    })}
+                </div>
+                <DropContainer>
+                    {(connect, { monitor, canDrop, items }) => {
+                        return (
+                            <div
+                                ref={connect}
+                                style={{
+                                    border: canDrop
+                                        ? "1px solid red"
+                                        : "1px solid #ccc",
+                                    flex: 1
+                                }}>
+                                {items.map(item => {
+                                    return (
+                                        <DropItem>
+                                            {connect => {
+                                                return (
+                                                    <div ref={connect}>
+                                                        {item.title}(
+                                                        {item.fieldId})
+                                                    </div>
+                                                );
+                                            }}
+                                        </DropItem>
+                                    );
+                                })}
+                            </div>
+                        );
+                    }}
+                </DropContainer>
+            </div>
+        </DesignerProvider>
     );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById("root"));

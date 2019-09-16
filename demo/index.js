@@ -28,32 +28,31 @@ function App() {
                     left: 0,
                     right: 0,
                     bottom: 0
-                }}>
+                }}
+            >
                 <div
                     style={{
                         width: 240,
                         flex: "none"
-                    }}>
+                    }}
+                >
                     {widgets.map(widget => {
                         return (
                             <WidgetItem
+                                disabled={widget.xtype === "EX_URL_FIELD"}
                                 getInstance={() => ({
-                                    ...widget.data(),
-                                    __tmp__: true
-                                })}>
-                                {connect => {
-                                    return (
-                                        <div
-                                            style={{
-                                                height: 32,
-                                                lineHeight: `32px`,
-                                                padding: "0 20px"
-                                            }}
-                                            ref={connect}>
-                                            {widget.title}
-                                        </div>
-                                    );
-                                }}
+                                    ...widget.data()
+                                })}
+                            >
+                                <div
+                                    style={{
+                                        height: 32,
+                                        lineHeight: `32px`,
+                                        padding: "0 20px"
+                                    }}
+                                >
+                                    {widget.title}
+                                </div>
                             </WidgetItem>
                         );
                     })}
@@ -68,7 +67,8 @@ function App() {
                                         ? "1px solid red"
                                         : "1px solid #ccc",
                                     flex: 1
-                                }}>
+                                }}
+                            >
                                 {items.map(item => {
                                     return (
                                         <DropItem>

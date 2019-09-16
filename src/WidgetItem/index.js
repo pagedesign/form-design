@@ -1,47 +1,123 @@
 import React from "react";
+import { findDOMNode } from "react-dom";
 import { useDrag } from "react-dnd";
 import invariant from "invariant";
+import withHooks from "with-component-hooks";
 import DesignerContext from "../DesignerContext";
 
-export default function WidgetItem({ children, getInstance, ...props }) {
-    const designer = React.useContext(DesignerContext);
+class WidgetItem extends React.Component {
+    _connectDragSource = null;
 
-    const [collectProps, connectDragSource] = useDrag({
-        item: {
-            type: designer.getScope()
-        },
+    connectDrag() {
+        const { disabled } = this.props;
 
-        begin(monitor) {
-            const item = getInstance();
-
-            designer.addItem(item);
-
-            console.log(item, designer.getScope(), "new instance");
-
-            return {
-                type: designer.getScope(),
-                item: item
-            };
-        },
-        end(item, monitor) {
-            designer.clearTmpItems();
-        },
-        collect(monitor) {
-            return {
-                isDragging: monitor.isDragging()
-            };
+        const dom = findDOMNode(this);
+        if (this._connectDragSource) {
+            this._connectDragSource(disabled ? null : dom);
         }
-    });
+    }
 
-    invariant(
-        typeof getInstance === "function",
-        "WidgetItem getInstance must be function!"
-    );
+    componentDidMount() {
+        this.connectDrag();
+    }
 
-    invariant(
-        typeof children === "function",
-        "WidgetItem children must be function!"
-    );
+    componentDidUpdate() {
+        this.connectDrag();
+    }
 
-    return children(connectDragSource, collectProps);
+    render() {
+        const {
+            children,
+            getInstance,
+            component: Component = "div",
+            ...props
+        } = this.props;
+
+        const designer = React.useContext(DesignerContext);
+
+        const [collectProps, connectDragSource] = useDrag({
+            item: {
+                type: designer.getScope()
+            },
+
+            begin(monitor) {
+                const item = getInstance();
+
+                designer.addTmpItem(item);
+
+                return {
+                    type: designer.getScope(),
+                    item: item
+                };
+            },
+            end(item, monitor) {
+                designer.clearTmpItems();
+            },
+            collect(monitor) {
+                return {
+                    isDragging: monitor.isDragging()
+                };
+            }
+        });
+
+        this._connectDragSource = connectDragSource;
+
+        return typeof children === "function"
+            ? children(collectProps)
+            : children;
+    }
 }
+
+export default withHooks(WidgetItem);
+
+// export default function WidgetItem({
+//     children,
+//     getInstance,
+//     component: Component = "div",
+//     ...props
+// }) {
+//     const designer = React.useContext(DesignerContext);
+
+//     const [collectProps, connectDragSource] = useDrag({
+//         item: {
+//             type: designer.getScope()
+//         },
+
+//         begin(monitor) {
+//             const item = getInstance();
+
+//             designer.addTmpItem(item);
+
+//             return {
+//                 type: designer.getScope(),
+//                 item: item
+//             };
+//         },
+//         end(item, monitor) {
+//             designer.clearTmpItems();
+//         },
+//         collect(monitor) {
+//             return {
+//                 isDragging: monitor.isDragging()
+//             };
+//         }
+//     });
+
+//     invariant(
+//         typeof getInstance === "function",
+//         "WidgetItem getInstance must be function!"
+//     );
+
+//     // invariant(
+//     //     typeof children === "function",
+//     //     "WidgetItem children must be function!"
+//     // );
+
+//     return (
+//         <Component {...props} ref={connectDragSource}>
+//             {children}
+//         </Component>
+//     );
+
+//     // return children(connectDragSource, collectProps);
+// }

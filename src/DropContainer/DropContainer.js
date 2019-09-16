@@ -2,6 +2,8 @@ import React from "react";
 import { useDrop } from "react-dnd";
 import invariant from "invariant";
 
+import DropItem from "./DropItem";
+
 import DesignerContext from "../DesignerContext";
 
 function canDrop(pid, item, designer) {
@@ -14,10 +16,14 @@ function canDrop(pid, item, designer) {
     return targetPids.indexOf(dragItemFieldId) === -1;
 }
 
-function DropContainer({ pid = null, children }) {
+function DropContainer({
+    pid = null,
+    children,
+    component: Component = "div",
+    // renderItem = () =>
+    ...props
+}) {
     const designer = React.useContext(DesignerContext);
-
-    const items = designer.getItems(pid);
 
     const [collectedProps, connectDropTarget] = useDrop({
         accept: designer.getScope(),
@@ -57,10 +63,23 @@ function DropContainer({ pid = null, children }) {
         }
     });
 
+    // const childs = typeof children === "function" ? children(items) : childs;
+
+    let items = designer.getItems(pid);
+    if (!collectedProps.isOver) {
+        items = items.filter(item => !designer.isTmpItem(item));
+    }
+
     invariant(
         typeof children === "function",
         "DropContainer children must be function!"
     );
+
+    // return (
+    //     <Component {...props} ref={connectDropTarget}>
+    //         {children(items)}
+    //     </Component>
+    // );
 
     return children(connectDropTarget, {
         items,

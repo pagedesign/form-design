@@ -1,9 +1,9 @@
-import data from '../common/data';
-import PropertyPanel from './PropertyPanel';
-import icon from './icon.png';
+import data from "../common/data";
+import PropertyPanel from "./PropertyPanel";
+import icon from "./icon.png";
 
-const XType = 'EX_TEXT_FIELD';
-const Title = '文本';
+const XType = "EX_URL_FIELD";
+const Title = "URL";
 
 export default {
     xtype: "EX_URL_FIELD",
@@ -15,7 +15,7 @@ export default {
         return {
             ...data(),
             xtype: XType,
-            title: Title,
-        }
+            title: Title
+        };
     }
 };

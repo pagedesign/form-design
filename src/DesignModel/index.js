@@ -137,6 +137,11 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
+    addTmpItem(item, pid) {
+        item.__tmp__ = true;
+        this.addItem(item, pid);
+    }
+
     removeItem(fieldId) {
         const items = this.getAllItems();
         //移除指定项目及子项目
@@ -294,6 +299,7 @@ export default class DesignModel extends React.Component {
             getActiveId: this.getActiveId.bind(this),
             getActiveItem: this.getActiveItem.bind(this),
             addItem: this.addItem.bind(this),
+            addTmpItem: this.addTmpItem.bind(this),
             getPids: this.getPids.bind(this),
             updateItem: this.updateItem.bind(this),
             getItems: this.getItems.bind(this),

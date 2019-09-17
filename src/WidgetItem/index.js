@@ -1,4 +1,5 @@
 import React from "react";
+import propTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { useDrag } from "react-dnd";
 import invariant from "invariant";
@@ -6,6 +7,13 @@ import withHooks from "with-component-hooks";
 import DesignerContext from "../DesignerContext";
 
 class WidgetItem extends React.Component {
+    static defaultProps = {
+        getInstance: propTypes.func,
+        canDrag: propTypes.func,
+        beginDrag: propTypes.func,
+        endDrag: propTypes.func
+    };
+
     _connectDragSource = null;
 
     connectDrag() {
@@ -29,7 +37,6 @@ class WidgetItem extends React.Component {
         const {
             children,
             getInstance,
-            component: Component = "div",
             canDrag,
             beginDrag,
             endDrag,
@@ -52,11 +59,12 @@ class WidgetItem extends React.Component {
 
             begin(monitor) {
                 const item = getInstance();
-                designer.addTmpItem(item);
 
                 if (beginDrag) {
                     beginDrag(item);
                 }
+
+                designer.addTmpItem(item);
 
                 return {
                     item: item
@@ -67,11 +75,13 @@ class WidgetItem extends React.Component {
                 if (endDrag) {
                     endDrag(item);
                 }
+
                 designer.clearTmpItems();
             },
 
             collect(monitor) {
                 return {
+                    monitor,
                     isDragging: monitor.isDragging()
                 };
             }

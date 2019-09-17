@@ -30,6 +30,9 @@ class WidgetItem extends React.Component {
             children,
             getInstance,
             component: Component = "div",
+            canDrag,
+            beginDrag,
+            endDrag,
             ...props
         } = this.props;
 
@@ -40,19 +43,33 @@ class WidgetItem extends React.Component {
                 type: designer.getScope()
             },
 
+            canDrag(monitor) {
+                if (canDrag) {
+                    return canDrag();
+                }
+                return true;
+            },
+
             begin(monitor) {
                 const item = getInstance();
-
                 designer.addTmpItem(item);
 
+                if (beginDrag) {
+                    beginDrag(item);
+                }
+
                 return {
-                    type: designer.getScope(),
                     item: item
                 };
             },
+
             end(item, monitor) {
+                if (endDrag) {
+                    endDrag(item);
+                }
                 designer.clearTmpItems();
             },
+
             collect(monitor) {
                 return {
                     isDragging: monitor.isDragging()
@@ -69,55 +86,3 @@ class WidgetItem extends React.Component {
 }
 
 export default withHooks(WidgetItem);
-
-// export default function WidgetItem({
-//     children,
-//     getInstance,
-//     component: Component = "div",
-//     ...props
-// }) {
-//     const designer = React.useContext(DesignerContext);
-
-//     const [collectProps, connectDragSource] = useDrag({
-//         item: {
-//             type: designer.getScope()
-//         },
-
-//         begin(monitor) {
-//             const item = getInstance();
-
-//             designer.addTmpItem(item);
-
-//             return {
-//                 type: designer.getScope(),
-//                 item: item
-//             };
-//         },
-//         end(item, monitor) {
-//             designer.clearTmpItems();
-//         },
-//         collect(monitor) {
-//             return {
-//                 isDragging: monitor.isDragging()
-//             };
-//         }
-//     });
-
-//     invariant(
-//         typeof getInstance === "function",
-//         "WidgetItem getInstance must be function!"
-//     );
-
-//     // invariant(
-//     //     typeof children === "function",
-//     //     "WidgetItem children must be function!"
-//     // );
-
-//     return (
-//         <Component {...props} ref={connectDragSource}>
-//             {children}
-//         </Component>
-//     );
-
-//     // return children(connectDragSource, collectProps);
-// }

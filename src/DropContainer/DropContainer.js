@@ -18,6 +18,8 @@ function _canDrop(pid, item, designer) {
 
 class DropContainer extends React.Component {
     static propTypes = {
+        pid: propTypes.any,
+        disabled: propTypes.bool,
         collect: propTypes.func,
         canDrop: propTypes.func,
         hover: propTypes.func,
@@ -50,6 +52,7 @@ class DropContainer extends React.Component {
     render() {
         const {
             pid = null,
+            disabled,
             canDrop,
             hover,
             drop,
@@ -80,7 +83,8 @@ class DropContainer extends React.Component {
                 const isOver = monitor.isOver({ shallow: true });
                 if (!isOver) return;
 
-                if (!monitor.canDrop() || !_canDrop(pid, item, designer)) {
+                if (!monitor.canDrop()) {
+                    //|| !_canDrop(pid, item, designer)
                     return;
                 }
 
@@ -115,7 +119,7 @@ class DropContainer extends React.Component {
                     monitor,
                     canDrop: monitor.canDrop(),
                     isOver: monitor.isOver(),
-                    isHover: monitor.isOver({ shallow: true }),
+                    isStrictlyOver: monitor.isOver({ shallow: true }),
                     ...ext
                 };
             }
@@ -128,6 +132,15 @@ class DropContainer extends React.Component {
 
         this._connectDropTarget = connectDropTarget;
 
+        console.log("DropContainerContext");
+
+        const child =
+            typeof children === "function"
+                ? children(items, collectedProps)
+                : children;
+
+        React.Children.only(child);
+
         return (
             <DropContainerContext.Provider
                 value={{
@@ -135,9 +148,7 @@ class DropContainer extends React.Component {
                     canDrop: canDrop
                 }}
             >
-                {typeof children === "function"
-                    ? children(items, collectedProps)
-                    : children}
+                {child}
             </DropContainerContext.Provider>
         );
     }

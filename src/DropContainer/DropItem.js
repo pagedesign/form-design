@@ -34,9 +34,9 @@ class DropItem extends React.Component {
 
         return {
             accept: designer.getScope(),
-            // canDrop(props, monitor) {
-            //     return true;
-            // },
+            canDrop({ item: dragItem }, monitor) {
+                return item.fieldId !== dragItem.fieldId;
+            },
 
             hover({ item: dragItem }, monitor) {
                 const isOver = monitor.isOver({ shallow: true });
@@ -44,14 +44,12 @@ class DropItem extends React.Component {
 
                 const canDropRet = canDrop ? canDrop(dragItem, monitor) : true;
 
-                if (
-                    !canDropRet ||
-                    !_canDrop(designer, dragItem, item, monitor)
-                ) {
+                if (!monitor.canDrop() || !canDropRet) {
+                    //|| item.fieldId !== dragItem.fieldId;
+                    //|| !_canDrop(designer, dragItem, item, monitor);
                     return;
                 }
 
-                // const dragItem = monitor.getItem();
                 const dragOffset = monitor.getClientOffset();
                 const previewDOM = findDOMNode(self);
 
@@ -73,7 +71,7 @@ class DropItem extends React.Component {
                 return {
                     monitor,
                     isOver: monitor.isOver(),
-                    isHover: monitor.isOver({ shallow: true }),
+                    isStrictlyOver: monitor.isOver({ shallow: true }),
                     canDrop: designer.isTmpItem(item)
                         ? false
                         : monitor.canDrop()
@@ -105,14 +103,14 @@ class DropItem extends React.Component {
                 // }
 
                 designer.clearTmpItems();
-            },
-
-            collect(monitor) {
-                return {
-                    // monitor,
-                    isDragging: monitor.isDragging()
-                };
             }
+
+            // collect(monitor) {
+            //     return {
+            //         // monitor,
+            //         // isDragging: monitor.isDragging()
+            //     };
+            // }
         };
     }
 

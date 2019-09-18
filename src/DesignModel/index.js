@@ -1,6 +1,6 @@
 import React from "react";
 import DesignerContext from "../DesignerContext";
-import Widget from "./Widget";
+// import Widget from "./Widget";
 
 import find from "lodash/find";
 import findIndex from "lodash/findIndex";
@@ -22,9 +22,8 @@ export default class DesignModel extends React.Component {
     }
 
     static defaultProps = {
-        scope: Math.random()
-            .toString(16)
-            .slice(2, 8),
+        idField: "id",
+        pidField: "pid",
         onChange: null,
         widgets: [],
         items: []
@@ -36,6 +35,11 @@ export default class DesignModel extends React.Component {
     });
 
     state = {
+        scope:
+            "scope_" +
+            Math.random()
+                .toString(16)
+                .slice(2, 8),
         widgets: [],
         widgetsMap: {},
         items: [],
@@ -70,8 +74,7 @@ export default class DesignModel extends React.Component {
     // }
 
     getScope() {
-        const props = this.props;
-        return props.scope;
+        return this.state.scope;
     }
 
     setActiveId(activeId) {
@@ -264,7 +267,21 @@ export default class DesignModel extends React.Component {
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
 
-        if (item.$pid === pid) return;
+        if (item.$pid === pid) return true;
+
+        /**
+         * 局部环路检测
+         * 如: {id: A, pid: null}  {id: B, pid: A}
+         * 这是如果updateItemPid(A, B) 结果为:
+         * {id: A, pid: B}  {id: B, pid: A}
+         *
+         */
+        const pids = pid == null ? [] : this.getPids(pid);
+        if (pids.length) {
+            if (pids.indexOf(fieldId) !== -1) {
+                return false;
+            }
+        }
 
         //fix: 同级节点转变为子节点时顺序问题
         if (pid) {
@@ -280,7 +297,7 @@ export default class DesignModel extends React.Component {
                 } else {
                     this.insertBefore(item, firstItem.fieldId);
                 }
-                return;
+                return true;
             }
         }
 
@@ -289,6 +306,8 @@ export default class DesignModel extends React.Component {
         }
 
         this.onChange(this.getAllItems());
+
+        return true;
     }
 
     commitItem(item) {
@@ -347,6 +366,8 @@ export default class DesignModel extends React.Component {
 
     render() {
         const { children } = this.props;
+        console.log("DesignModel:");
+
         return (
             <DesignerContext.Provider value={this.getModel()}>
                 {children}

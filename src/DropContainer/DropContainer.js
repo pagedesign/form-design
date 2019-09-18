@@ -23,7 +23,8 @@ class DropContainer extends React.Component {
         collect: propTypes.func,
         canDrop: propTypes.func,
         hover: propTypes.func,
-        drop: propTypes.func
+        drop: propTypes.func,
+        onDrop: propTypes.func
     };
 
     static defaultProps = {
@@ -52,10 +53,10 @@ class DropContainer extends React.Component {
     render() {
         const {
             pid = null,
-            disabled,
             canDrop,
             hover,
             drop,
+            onDrop,
             collect,
             children
         } = this.props;
@@ -96,10 +97,14 @@ class DropContainer extends React.Component {
                     drop(item, monitor);
                 }
 
-                // if (monitor.didDrop()) {
-                //     console.log("did commit");
-                //     return;
-                // }
+                if (onDrop) {
+                    //TODO:???
+                }
+
+                if (monitor.didDrop()) {
+                    console.log(" didDrop");
+                    return;
+                }
 
                 if (isRootContainer) {
                     console.log("commit");
@@ -146,8 +151,7 @@ class DropContainer extends React.Component {
                 value={{
                     isRootContainer: false,
                     canDrop: canDrop
-                }}
-            >
+                }}>
                 {child}
             </DropContainerContext.Provider>
         );

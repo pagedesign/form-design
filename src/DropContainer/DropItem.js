@@ -22,7 +22,9 @@ function _canDrop(designer, dragItem, item, monitor) {
 
 class DropItem extends React.Component {
     static propTypes = {
-        item: propTypes.object.isRequired
+        item: propTypes.object.isRequired,
+        disableDrag: propTypes.bool,
+        disableDrop: propTypes.bool
     };
 
     getDropOptions() {
@@ -118,14 +120,14 @@ class DropItem extends React.Component {
     _connectDragTarget = null;
 
     connectDropAndDrag() {
-        const { disabled } = this.props;
+        const { disableDrag, disableDrop } = this.props;
 
         const dom = findDOMNode(this);
         if (this._connectDropTarget) {
-            this._connectDropTarget(disabled ? null : dom);
+            this._connectDropTarget(disableDrop ? null : dom);
         }
         if (this._connectDragTarget) {
-            this._connectDragTarget(disabled ? null : dom);
+            this._connectDragTarget(disableDrag ? null : dom);
         }
     }
 

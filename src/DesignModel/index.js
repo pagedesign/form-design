@@ -1,11 +1,39 @@
 import React from "react";
+import propTypes from "prop-types";
 import DesignerContext from "../DesignerContext";
 // import Widget from "./Widget";
 
 import find from "lodash/find";
 import findIndex from "lodash/findIndex";
 
+let idx = 1;
+
+function randomStr(prefix = "") {
+    return (
+        prefix +
+        Math.random()
+            .toString(16)
+            .slice(2, 8)
+    );
+}
+
+function normalizeItem(item, props) {
+    const idField = props.idField;
+    const pidField = props.pidField;
+
+    item[idField] =
+        item[idField] === undefined ? randomStr(`${idx++}_`) : item[idField];
+
+    item[pidField] = item[pidField] === undefined ? null : item[pidField];
+
+    return item;
+}
+
 export default class DesignModel extends React.Component {
+    static propTypes = {
+        items: propTypes.array
+    };
+
     static getDerivedStateFromProps(props, state) {
         // const widgetsMap = {};
         // const widgets = props.widgets.map(widget => {
@@ -17,7 +45,7 @@ export default class DesignModel extends React.Component {
         return {
             // widgets,
             // widgetsMap,
-            items: props.items || []
+            items: props.items.map(item => normalizeItem(item, props))
         };
     }
 
@@ -35,11 +63,7 @@ export default class DesignModel extends React.Component {
     });
 
     state = {
-        scope:
-            "scope_" +
-            Math.random()
-                .toString(16)
-                .slice(2, 8),
+        scope: randomStr("scope_"),
         widgets: [],
         widgetsMap: {},
         items: [],
@@ -49,6 +73,8 @@ export default class DesignModel extends React.Component {
     onChange(items) {
         const props = this.props;
         const { onChange } = props;
+
+        //TODO: 列出新增节点或删除节点
 
         if (onChange) {
             onChange(items);
@@ -139,6 +165,8 @@ export default class DesignModel extends React.Component {
     }
 
     addItem(item, pid = null) {
+        item = normalizeItem(item, this.props);
+
         const items = this.getAllItems();
 
         item.$pid = pid;

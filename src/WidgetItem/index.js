@@ -2,12 +2,12 @@ import React from "react";
 import propTypes from "prop-types";
 import { findDOMNode } from "react-dom";
 import { useDrag } from "react-dnd";
-import invariant from "invariant";
 import withHooks from "with-component-hooks";
 import DesignerContext from "../DesignerContext";
 
 class WidgetItem extends React.Component {
     static propTypes = {
+        disabled: propTypes.bool,
         getInstance: propTypes.func,
         canDrag: propTypes.func,
         beginDrag: propTypes.func,
@@ -39,8 +39,7 @@ class WidgetItem extends React.Component {
             getInstance,
             canDrag,
             beginDrag,
-            endDrag,
-            ...props
+            endDrag
         } = this.props;
 
         const designer = React.useContext(DesignerContext);
@@ -52,7 +51,7 @@ class WidgetItem extends React.Component {
 
             canDrag(monitor) {
                 if (canDrag) {
-                    return canDrag();
+                    return canDrag(monitor);
                 }
                 return true;
             },
@@ -61,7 +60,7 @@ class WidgetItem extends React.Component {
                 const item = getInstance();
 
                 if (beginDrag) {
-                    beginDrag(item);
+                    beginDrag(item, monitor);
                 }
 
                 designer.addTmpItem(item);
@@ -73,7 +72,7 @@ class WidgetItem extends React.Component {
 
             end(item, monitor) {
                 if (endDrag) {
-                    endDrag(item);
+                    endDrag(item, monitor);
                 }
 
                 designer.clearTmpItems();
@@ -89,9 +88,12 @@ class WidgetItem extends React.Component {
 
         this._connectDragSource = connectDragSource;
 
-        return typeof children === "function"
-            ? children(collectProps)
-            : children;
+        const child =
+            typeof children === "function" ? children(collectProps) : children;
+
+        React.Children.only(child);
+
+        return child;
     }
 }
 

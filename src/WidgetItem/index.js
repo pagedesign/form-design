@@ -7,7 +7,7 @@ import withHooks from "with-component-hooks";
 import DesignerContext from "../DesignerContext";
 
 class WidgetItem extends React.Component {
-    static defaultProps = {
+    static propTypes = {
         getInstance: propTypes.func,
         canDrag: propTypes.func,
         beginDrag: propTypes.func,

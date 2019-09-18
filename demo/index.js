@@ -11,12 +11,62 @@ import "../src/style";
 
 // const Container = styled.div``;
 
+function DropContainerDemo({ pid = null, title, canDrop }) {
+    return (
+        <DropContainer pid={pid} canDrop={canDrop}>
+            {(items, { monitor, canDrop }) => {
+                return (
+                    <div
+                        style={{
+                            border: canDrop
+                                ? "1px solid green"
+                                : "1px solid #ccc",
+                            flex: 1
+                        }}
+                    >
+                        <h3>{title}</h3>
+                        <hr />
+                        {items.map(item => {
+                            return (
+                                <DropItem key={item.fieldId} item={item}>
+                                    {({
+                                        isDragging,
+                                        isHover,
+                                        isOver,
+                                        isTmp
+                                    }) => {
+                                        return (
+                                            <div
+                                                style={{
+                                                    opacity: isDragging
+                                                        ? 0.5
+                                                        : 1,
+                                                    padding: 10,
+                                                    margin: 5,
+                                                    background: "#f2f2f2",
+                                                    border: "1px solid #dadada"
+                                                }}
+                                            >
+                                                {item.title}({item.fieldId})
+                                            </div>
+                                        );
+                                    }}
+                                </DropItem>
+                            );
+                        })}
+                    </div>
+                );
+            }}
+        </DropContainer>
+    );
+}
+
 function App() {
     const [metadata, onMetadataChange] = React.useState({
         items: []
     });
 
-    console.log("items,", metadata);
+    // console.log("items,", metadata);
 
     return (
         <DesignerProvider metadata={metadata} onChange={onMetadataChange}>
@@ -39,6 +89,7 @@ function App() {
                     {widgets.map(widget => {
                         return (
                             <WidgetItem
+                                key={widget.xtype}
                                 disabled={widget.xtype === "EX_URL_FIELD"}
                                 getInstance={() => ({
                                     ...widget.data()
@@ -57,36 +108,16 @@ function App() {
                         );
                     })}
                 </div>
-                <DropContainer>
-                    {(connect, { monitor, canDrop, items }) => {
-                        return (
-                            <div
-                                ref={connect}
-                                style={{
-                                    border: canDrop
-                                        ? "1px solid red"
-                                        : "1px solid #ccc",
-                                    flex: 1
-                                }}
-                            >
-                                {items.map(item => {
-                                    return (
-                                        <DropItem>
-                                            {connect => {
-                                                return (
-                                                    <div ref={connect}>
-                                                        {item.title}(
-                                                        {item.fieldId})
-                                                    </div>
-                                                );
-                                            }}
-                                        </DropItem>
-                                    );
-                                })}
-                            </div>
-                        );
+                <DropContainerDemo title="A" />
+                <DropContainerDemo pid="b" title="B" />
+                <DropContainerDemo pid="c" title="C" />
+                <DropContainerDemo
+                    pid="d"
+                    title="D"
+                    canDrop={item => {
+                        return item.xtype === "EX_TEXTAREA_FIELD";
                     }}
-                </DropContainer>
+                />
             </div>
         </DesignerProvider>
     );

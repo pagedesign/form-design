@@ -4,11 +4,9 @@ import { useDrop } from "react-dnd";
 import propTypes from "prop-types";
 import withHooks from "with-component-hooks";
 
-// import DropItem from "./DropItem";
-
 import DesignerContext from "../DesignerContext";
 
-function canDrop(pid, item, designer) {
+function _canDrop(pid, item, designer) {
     //子容器拖动过程中不再接受释放处理
     // const pid = props.pid;
     const dragItemFieldId = item.fieldId;
@@ -19,11 +17,15 @@ function canDrop(pid, item, designer) {
 }
 
 class DropContainer extends React.Component {
-    static defaultProps = {
+    static propTypes = {
         collect: propTypes.func,
         canDrop: propTypes.func,
         hover: propTypes.func,
         drop: propTypes.func
+    };
+
+    static defaultProps = {
+        pid: null
     };
 
     _connectDropTarget = null;
@@ -54,7 +56,10 @@ class DropContainer extends React.Component {
             collect,
             children
         } = this.props;
+
         const designer = React.useContext(DesignerContext);
+        const DropContainerContext = designer.DropContainerContext;
+        const { isRootContainer } = React.useContext(DropContainerContext);
 
         const [collectedProps, connectDropTarget] = useDrop({
             accept: designer.getScope(),
@@ -75,7 +80,9 @@ class DropContainer extends React.Component {
                 const isOver = monitor.isOver({ shallow: true });
                 if (!isOver) return;
 
-                if (!monitor.canDrop() || !canDrop(pid, item, designer)) return;
+                if (!monitor.canDrop() || !_canDrop(pid, item, designer)) {
+                    return;
+                }
 
                 designer.updateItemPid(item, pid);
             },
@@ -85,100 +92,55 @@ class DropContainer extends React.Component {
                     drop(item, monitor);
                 }
 
-                //根节点统一commit
-                if (null == pid) {
+                // if (monitor.didDrop()) {
+                //     console.log("did commit");
+                //     return;
+                // }
+
+                if (isRootContainer) {
+                    console.log("commit");
                     designer.commitItem(item);
                 }
+
+                //根节点统一commit
+                // if (null == pid) {
+                //     designer.commitItem(item);
+                // }
             },
 
             collect: monitor => {
+                const ext = collect ? collect(monitor) : {};
+
                 return {
                     monitor,
                     canDrop: monitor.canDrop(),
                     isOver: monitor.isOver(),
                     isHover: monitor.isOver({ shallow: true }),
-                    ...(collect ? collect(monitor) : {})
+                    ...ext
                 };
             }
         });
 
+        let items = designer.getItems(pid);
+        if (!collectedProps.isOver) {
+            items = items.filter(item => !designer.isTmpItem(item));
+        }
+
         this._connectDropTarget = connectDropTarget;
 
-        return typeof children === "function"
-            ? children(collectedProps)
-            : children;
+        return (
+            <DropContainerContext.Provider
+                value={{
+                    isRootContainer: false,
+                    canDrop: canDrop
+                }}
+            >
+                {typeof children === "function"
+                    ? children(items, collectedProps)
+                    : children}
+            </DropContainerContext.Provider>
+        );
     }
 }
-
-// function DropContainer({
-//     pid = null,
-//     children,
-//     component: Component = "div",
-//     // renderItem = () =>
-//     ...props
-// }) {
-//     const designer = React.useContext(DesignerContext);
-
-//     const [collectedProps, connectDropTarget] = useDrop({
-//         accept: designer.getScope(),
-//         canDrop({ item }, monitor) {
-//             return true;
-//         },
-
-//         hover({ item }, monitor) {
-//             const isOver = monitor.isOver({ shallow: true });
-//             if (!isOver) return;
-
-//             if (!monitor.canDrop() || !canDrop(pid, item, designer)) return;
-
-//             // const pid = props.pid;
-//             // const dragItem = monitor.getItem();
-//             // const item = dragItem.item;
-
-//             designer.updateItemPid(item, pid);
-//         },
-
-//         drop({ item }, monitor) {
-//             // const dragItem = monitor.getItem();
-
-//             //根节点统一commit
-//             if (null == pid) {
-//                 designer.commitItem(item);
-//             }
-//         },
-
-//         collect: monitor => {
-//             return {
-//                 monitor,
-//                 canDrop: monitor.canDrop(),
-//                 isOver: monitor.isOver(),
-//                 isHover: monitor.isOver({ shallow: true })
-//             };
-//         }
-//     });
-
-//     // const childs = typeof children === "function" ? children(items) : childs;
-
-//     let items = designer.getItems(pid);
-//     if (!collectedProps.isOver) {
-//         items = items.filter(item => !designer.isTmpItem(item));
-//     }
-
-//     invariant(
-//         typeof children === "function",
-//         "DropContainer children must be function!"
-//     );
-
-//     // return (
-//     //     <Component {...props} ref={connectDropTarget}>
-//     //         {children(items)}
-//     //     </Component>
-//     // );
-
-//     return children(connectDropTarget, {
-//         items,
-//         ...collectedProps
-//     });
-// }
 
 export default withHooks(DropContainer);

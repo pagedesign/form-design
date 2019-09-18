@@ -30,6 +30,11 @@ export default class DesignModel extends React.Component {
         items: []
     };
 
+    DropContainerContext = React.createContext({
+        isRootContainer: true,
+        canDrop: null
+    });
+
     state = {
         widgets: [],
         widgetsMap: {},
@@ -102,6 +107,9 @@ export default class DesignModel extends React.Component {
     getPids(fieldId) {
         const pids = [];
         let node = this.getItem(fieldId);
+
+        if (!node) return pids;
+
         if (!node.$pid) return pids;
 
         let currentFieldId = node.$pid;
@@ -139,7 +147,14 @@ export default class DesignModel extends React.Component {
 
     addTmpItem(item, pid) {
         item.__tmp__ = true;
+        item.__dragging__ = true;
         this.addItem(item, pid);
+    }
+
+    setItemDragging(item) {
+        item.__dragging__ = true;
+
+        this.onChange(this.getAllItems());
     }
 
     removeItem(fieldId) {
@@ -233,7 +248,14 @@ export default class DesignModel extends React.Component {
 
     clearTmpItems() {
         const items = this.getAllItems();
-        const newItems = items.filter(item => !item.__tmp__);
+        const newItems = items
+            .map(item => {
+                if (item.__dragging__) {
+                    delete item.__dragging__;
+                }
+                return item;
+            })
+            .filter(item => !item.__tmp__);
 
         this.onChange(newItems);
     }
@@ -290,8 +312,13 @@ export default class DesignModel extends React.Component {
         return !!item.__tmp__;
     }
 
+    isDragging(item) {
+        return item.__dragging__;
+    }
+
     getModel() {
         return {
+            DropContainerContext: this.DropContainerContext,
             // getWidget: this.getWidget.bind(this),
             // getWidgets: this.getWidgets.bind(this),
             getScope: this.getScope.bind(this),
@@ -312,7 +339,9 @@ export default class DesignModel extends React.Component {
             clearTmpItems: this.clearTmpItems.bind(this),
             commitItem: this.commitItem.bind(this),
             isTmpItem: this.isTmpItem.bind(this),
-            updateItemPid: this.updateItemPid.bind(this)
+            updateItemPid: this.updateItemPid.bind(this),
+            setItemDragging: this.setItemDragging.bind(this),
+            isDragging: this.isDragging.bind(this)
         };
     }
 

@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import { useDrop } from "react-dnd";
 import propTypes from "prop-types";
 import withHooks from "with-component-hooks";
-
+import { ACTION_ADD, ACTION_SORT } from "../constants";
 import DesignerContext from "../DesignerContext";
 
 function _canDrop(pid, item, designer) {
@@ -101,15 +101,21 @@ class DropContainer extends React.Component {
                     //TODO:???
                 }
 
-                if (monitor.didDrop()) {
-                    console.log(" didDrop");
-                    return;
-                }
-
+                //根节点统一commit
                 if (isRootContainer) {
+                    const isTmpItem = designer.isTmpItem(item);
                     console.log("commit");
                     designer.commitItem(item);
+
+                    designer.fireEvent("onDrop", {
+                        target: item,
+                        action: isTmpItem ? ACTION_ADD : ACTION_SORT
+                    });
                 }
+
+                // if (!monitor.didDrop()) {
+                //     //TODO:
+                // }
 
                 //根节点统一commit
                 // if (null == pid) {
@@ -151,7 +157,8 @@ class DropContainer extends React.Component {
                 value={{
                     isRootContainer: false,
                     canDrop: canDrop
-                }}>
+                }}
+            >
                 {child}
             </DropContainerContext.Provider>
         );

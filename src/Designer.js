@@ -30,13 +30,15 @@ export default class Designer extends React.Component {
     };
 
     render() {
-        const { metadata, children } = this.props;
+        const { metadata, children, ...props } = this.props;
 
         return (
             <DndProvider backend={HTML5Backend}>
                 <DesignModel
+                    {...props}
                     items={metadata.items}
-                    onChange={this.handleModelChange}>
+                    onChange={this.handleModelChange}
+                >
                     {children}
                 </DesignModel>
             </DndProvider>

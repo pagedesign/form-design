@@ -3,7 +3,7 @@ import { findDOMNode } from "react-dom";
 import propTypes from "prop-types";
 import withHooks from "with-component-hooks";
 import { useDrop, useDrag } from "react-dnd";
-
+import { ACTION_ADD, ACTION_SORT } from "../constants";
 import DesignerContext from "../DesignerContext";
 
 function _canDrop(designer, dragItem, item, monitor) {
@@ -92,7 +92,13 @@ class DropItem extends React.Component {
             },
 
             begin(props) {
+                // console.log("begin DropItem");
                 designer.setItemDragging(item);
+
+                designer.fireEvent("onDragStart", {
+                    target: item,
+                    action: ACTION_SORT
+                });
 
                 return {
                     item
@@ -103,8 +109,14 @@ class DropItem extends React.Component {
                 // if (endDrag) {
                 //     endDrag(item);
                 // }
+                // console.log("end DropItem");
 
                 designer.clearTmpItems();
+
+                designer.fireEvent("onDragEnd", {
+                    target: item,
+                    action: ACTION_SORT
+                });
             }
 
             // collect(monitor) {

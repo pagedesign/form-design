@@ -66,10 +66,27 @@ function App() {
         items: []
     });
 
+    function onChange(...a) {
+        console.log("onMetadataChange");
+        onMetadataChange(...a);
+    }
+    console.log("APP-render");
     // console.log("items,", metadata);
 
     return (
-        <DesignerProvider metadata={metadata} onChange={onMetadataChange}>
+        <DesignerProvider
+            metadata={metadata}
+            onChange={onChange}
+            onDragStart={ev => {
+                console.log("onDragStart", ev);
+            }}
+            onDragEnd={ev => {
+                console.log("onDragEnd", ev);
+            }}
+            onDrop={ev => {
+                console.log("onDrop", ev);
+            }}
+        >
             <div
                 style={{
                     display: "flex",

@@ -4,11 +4,12 @@ import { findDOMNode } from "react-dom";
 import { useDrag } from "react-dnd";
 import withHooks from "with-component-hooks";
 import DesignerContext from "../DesignerContext";
+import { ACTION_ADD, ACTION_SORT } from "../constants";
 
 class WidgetItem extends React.Component {
     static propTypes = {
+        getInstance: propTypes.func.isRequired,
         disabled: propTypes.bool,
-        getInstance: propTypes.func,
         canDrag: propTypes.func,
         beginDrag: propTypes.func,
         endDrag: propTypes.func
@@ -65,6 +66,11 @@ class WidgetItem extends React.Component {
 
                 designer.addTmpItem(item);
 
+                designer.fireEvent("onDragStart", {
+                    target: item,
+                    action: ACTION_ADD
+                });
+
                 return {
                     item: item
                 };
@@ -76,6 +82,11 @@ class WidgetItem extends React.Component {
                 }
 
                 designer.clearTmpItems();
+
+                designer.fireEvent("onDragEnd", {
+                    target: item,
+                    action: ACTION_ADD
+                });
             },
 
             collect(monitor) {

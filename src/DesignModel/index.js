@@ -31,7 +31,11 @@ function normalizeItem(item, props) {
 
 export default class DesignModel extends React.Component {
     static propTypes = {
-        items: propTypes.array
+        items: propTypes.array,
+        onChange: propTypes.func,
+        onDragStart: propTypes.func,
+        onDragEnd: propTypes.func,
+        onDrop: propTypes.func
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -101,6 +105,22 @@ export default class DesignModel extends React.Component {
 
     getScope() {
         return this.state.scope;
+    }
+
+    fireEvent(eventName, ev) {
+        const { onDragStart, onDragEnd, onDrop } = this.props;
+
+        const events = {
+            onDragStart,
+            onDragEnd,
+            onDrop
+        };
+
+        const handler = events[eventName];
+
+        if (handler) {
+            handler(ev);
+        }
     }
 
     setActiveId(activeId) {
@@ -343,16 +363,15 @@ export default class DesignModel extends React.Component {
         const fieldId = item.fieldId;
         const idx = this.getItemIndex(fieldId);
 
-        if (idx !== -1) {
+        if (idx !== -1 && item.__tmp__) {
             item.__tmp__ = false;
             delete item.__tmp__;
             items[idx] = item;
-            this.setState({
-                activeId: item.fieldId
-            });
+            // this.setState({
+            //     activeId: item.fieldId
+            // });
+            this.onChange(items);
         }
-
-        this.onChange(items);
     }
 
     isTmpItem(item) {
@@ -360,7 +379,7 @@ export default class DesignModel extends React.Component {
     }
 
     isDragging(item) {
-        return item.__dragging__;
+        return !!item.__dragging__;
     }
 
     getModel() {
@@ -369,6 +388,7 @@ export default class DesignModel extends React.Component {
             // getWidget: this.getWidget.bind(this),
             // getWidgets: this.getWidgets.bind(this),
             getScope: this.getScope.bind(this),
+            fireEvent: this.fireEvent.bind(this),
             setActiveId: this.setActiveId.bind(this),
             getActiveId: this.getActiveId.bind(this),
             getActiveItem: this.getActiveItem.bind(this),

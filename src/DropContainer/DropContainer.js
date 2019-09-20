@@ -3,6 +3,7 @@ import { findDOMNode } from "react-dom";
 import { useDrop } from "react-dnd";
 import propTypes from "prop-types";
 import withHooks from "with-component-hooks";
+import invariant from "invariant";
 import { ACTION_ADD, ACTION_SORT } from "../constants";
 import DesignerContext from "../DesignerContext";
 
@@ -65,6 +66,11 @@ class DropContainer extends React.Component {
         const DropContainerContext = designer.DropContainerContext;
         const { isRootContainer } = React.useContext(DropContainerContext);
 
+        invariant(
+            isRootContainer ? true : pid != null,
+            "sub DropContainer props.pid miss."
+        );
+
         const [collectedProps, connectDropTarget] = useDrop({
             accept: designer.getScope(),
 
@@ -97,9 +103,9 @@ class DropContainer extends React.Component {
                     drop(item, monitor);
                 }
 
-                if (onDrop) {
-                    //TODO:???
-                }
+                // if (onDrop) {
+                //     //TODO:???
+                // }
 
                 //根节点统一commit
                 if (isRootContainer) {
@@ -157,8 +163,7 @@ class DropContainer extends React.Component {
                 value={{
                     isRootContainer: false,
                     canDrop: canDrop
-                }}
-            >
+                }}>
                 {child}
             </DropContainerContext.Provider>
         );

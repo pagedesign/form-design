@@ -22,13 +22,12 @@ function DropContainerDemo({ pid = null, title, canDrop }) {
                                 ? "1px solid green"
                                 : "1px solid #ccc",
                             flex: 1
-                        }}
-                    >
+                        }}>
                         <h3>{title}</h3>
                         <hr />
                         {items.map(item => {
                             return (
-                                <DropItem key={item.fieldId} item={item}>
+                                <DropItem key={item.id} item={item}>
                                     {({
                                         isDragging,
                                         isHover,
@@ -45,9 +44,8 @@ function DropContainerDemo({ pid = null, title, canDrop }) {
                                                     margin: 5,
                                                     background: "#f2f2f2",
                                                     border: "1px solid #dadada"
-                                                }}
-                                            >
-                                                {item.title}({item.fieldId})
+                                                }}>
+                                                {item.title}({item.id})
                                             </div>
                                         );
                                     }}
@@ -85,8 +83,7 @@ function App() {
             }}
             onDrop={ev => {
                 console.log("onDrop", ev);
-            }}
-        >
+            }}>
             <div
                 style={{
                     display: "flex",
@@ -95,14 +92,12 @@ function App() {
                     left: 0,
                     right: 0,
                     bottom: 0
-                }}
-            >
+                }}>
                 <div
                     style={{
                         width: 240,
                         flex: "none"
-                    }}
-                >
+                    }}>
                     {widgets.map(widget => {
                         return (
                             <WidgetItem
@@ -110,15 +105,13 @@ function App() {
                                 disabled={widget.xtype === "EX_URL_FIELD"}
                                 getInstance={() => ({
                                     ...widget.data()
-                                })}
-                            >
+                                })}>
                                 <div
                                     style={{
                                         height: 32,
                                         lineHeight: `32px`,
                                         padding: "0 20px"
-                                    }}
-                                >
+                                    }}>
                                     {widget.title}
                                 </div>
                             </WidgetItem>

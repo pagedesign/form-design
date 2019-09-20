@@ -46,10 +46,12 @@ export default class DesignModel extends React.Component {
         //     return w;
         // });
 
+        props.items.forEach(item => normalizeItem(item, props));
+
         return {
             // widgets,
             // widgetsMap,
-            items: props.items.map(item => normalizeItem(item, props))
+            items: props.items
         };
     }
 
@@ -57,7 +59,7 @@ export default class DesignModel extends React.Component {
         idField: "id",
         pidField: "pid",
         onChange: null,
-        widgets: [],
+        // widgets: [],
         items: []
     };
 
@@ -68,17 +70,15 @@ export default class DesignModel extends React.Component {
 
     state = {
         scope: randomStr("scope_"),
-        widgets: [],
-        widgetsMap: {},
-        items: [],
-        activeId: null
+        items: []
+        // widgets: [],
+        // widgetsMap: {},
+        // activeId: null
     };
 
     onChange(items) {
         const props = this.props;
         const { onChange } = props;
-
-        //TODO: 列出新增节点或删除节点
 
         if (onChange) {
             onChange(items);
@@ -123,29 +123,31 @@ export default class DesignModel extends React.Component {
         }
     }
 
-    setActiveId(activeId) {
-        this.setState({
-            activeId
-        });
-    }
+    // setActiveId(activeId) {
+    //     this.setState({
+    //         activeId
+    //     });
+    // }
 
-    getActiveId() {
-        return this.state.activeId;
-    }
+    // getActiveId() {
+    //     return this.state.activeId;
+    // }
 
-    getActiveItem() {
-        const activeId = this.state.activeId;
-        return this.getItem(activeId) || null;
-    }
+    // getActiveItem() {
+    //     const activeId = this.state.activeId;
+    //     return this.getItem(activeId) || null;
+    // }
 
     getItems(pid = null) {
+        const { pidField } = this.props;
         const items = this.getAllItems();
 
-        return items.filter(item => item && item.$pid == pid);
+        return items.filter(item => item && item[pidField] == pid);
     }
 
-    getChildren(fieldId = null, items = this.state.items) {
-        return items.filter(item => item.$pid == fieldId);
+    getChildren(id = null, items = this.state.items) {
+        const { pidField } = this.props;
+        return items.filter(item => item[pidField] == id);
     }
 
     getAllItems() {
@@ -153,19 +155,20 @@ export default class DesignModel extends React.Component {
     }
 
     //获取组件的所有父级ID
-    getPids(fieldId) {
+    getPids(id) {
+        const { idField, pidField } = this.props;
         const pids = [];
-        let node = this.getItem(fieldId);
+        let node = this.getItem(id);
 
         if (!node) return pids;
 
-        if (!node.$pid) return pids;
+        if (!node[pidField]) return pids;
 
-        let currentFieldId = node.$pid;
+        let currentFieldId = node[pidField];
         let pNode;
         while ((pNode = this.getItem(currentFieldId))) {
-            pids.push(pNode.fieldId);
-            currentFieldId = pNode.$pid;
+            pids.push(pNode[idField]);
+            currentFieldId = pNode[pidField];
             if (!currentFieldId) break;
         }
 
@@ -173,9 +176,10 @@ export default class DesignModel extends React.Component {
     }
 
     updateItem(item) {
+        const { idField } = this.props;
         const items = this.getAllItems();
-        const fieldId = item.fieldId;
-        const idx = this.getItemIndex(fieldId);
+        const id = item[idField];
+        const idx = this.getItemIndex(id);
 
         if (idx !== -1) {
             items[idx] = item;
@@ -184,12 +188,19 @@ export default class DesignModel extends React.Component {
         this.onChange(items);
     }
 
+    isSameItem(s1, s2) {
+        const { idField } = this.props;
+
+        return s1[idField] === s2[idField];
+    }
+
     addItem(item, pid = null) {
+        const { pidField } = this.props;
         item = normalizeItem(item, this.props);
 
         const items = this.getAllItems();
 
-        item.$pid = pid;
+        item[pidField] = pid;
 
         items.push(item);
 
@@ -208,15 +219,16 @@ export default class DesignModel extends React.Component {
         this.onChange(this.getAllItems());
     }
 
-    removeItem(fieldId) {
+    removeItem(id) {
+        const { idField } = this.props;
         const items = this.getAllItems();
         //移除指定项目及子项目
         const ret = items.filter(item => {
-            let shouldRemove = item.fieldId === fieldId;
+            let shouldRemove = item[idField] === id;
 
             if (!shouldRemove) {
-                const pids = this.getPids(item.fieldId);
-                shouldRemove = pids.indexOf(fieldId) > -1;
+                const pids = this.getPids(item[idField]);
+                shouldRemove = pids.indexOf(id) > -1;
             }
 
             return !shouldRemove;
@@ -225,73 +237,79 @@ export default class DesignModel extends React.Component {
         this.onChange(ret);
     }
 
-    getItemIndex(fieldId, items) {
+    getItemIndex(id, items) {
+        const { idField } = this.props;
         items = items || this.getAllItems();
-        return findIndex(items, item => item.fieldId === fieldId);
+        return findIndex(items, item => item[idField] === id);
     }
 
-    getItem(fieldId) {
+    getItem(id) {
+        const { idField } = this.props;
         const items = this.getAllItems();
-        return find(items, item => item && item.fieldId === fieldId);
+        return find(items, item => item && item[idField] === id);
     }
 
-    insertBefore(item, fieldId) {
+    insertBefore(item, bItem) {
+        const { idField, pidField } = this.props;
         const items = this.getAllItems();
-        const bItem = this.getItem(fieldId);
+        const id = bItem[idField];
+        // const bItem = this.getItem(id);
 
         //判断是否需要移动
-        const _idx = this.getItemIndex(fieldId);
+        const _idx = this.getItemIndex(id);
         if (_idx !== 0) {
             const prevItem = items[_idx - 1];
             if (
-                prevItem.fieldId === item.fieldId &&
-                prevItem.$pid === bItem.$pid
+                prevItem[idField] === item[idField] &&
+                prevItem[pidField] === bItem[pidField]
             ) {
                 return;
             }
         }
 
         //判断当前item是否已经存在, 如果存在则先删除
-        const oIdx = this.getItemIndex(item.fieldId);
+        const oIdx = this.getItemIndex(item[idField]);
         if (oIdx > -1) {
             items.splice(oIdx, 1);
         }
 
-        item.$pid = bItem.$pid;
+        item[pidField] = bItem[pidField];
 
         //插入操作
-        const idx = this.getItemIndex(fieldId, items);
+        const idx = this.getItemIndex(id, items);
         items.splice(idx, 0, item);
 
         this.onChange(items);
     }
 
-    insertAfter(item, fieldId) {
+    insertAfter(item, prevItem) {
+        const { idField, pidField } = this.props;
         const items = this.getAllItems();
-        const prevItem = this.getItem(fieldId);
+        const id = prevItem[idField];
+        // const prevItem = this.getItem(id);
 
         //判断是否需要移动
-        const _idx = this.getItemIndex(fieldId);
+        const _idx = this.getItemIndex(id);
         if (_idx !== items.length - 1) {
             const nextItem = items[_idx + 1];
             if (
-                nextItem.fieldId === item.fieldId &&
-                nextItem.$pid === prevItem.$pid
+                nextItem[idField] === item[idField] &&
+                nextItem[pidField] === prevItem[pidField]
             ) {
                 return;
             }
         }
 
         //判断当前item是否已经存在, 如果存在则先删除
-        const oIdx = this.getItemIndex(item.fieldId);
+        const oIdx = this.getItemIndex(item[idField]);
         if (oIdx > -1) {
             items.splice(oIdx, 1);
         }
 
-        item.$pid = prevItem.$pid;
+        item[pidField] = prevItem[pidField];
 
         //插入操作 之前有删除操作, 要重新查找index
-        const idx = findIndex(items, item => item.fieldId === fieldId);
+        const idx = findIndex(items, item => item[idField] === id);
         items.splice(idx, 1, items[idx], item);
 
         this.onChange(items);
@@ -312,10 +330,11 @@ export default class DesignModel extends React.Component {
     }
 
     updateItemPid(item, pid = null) {
-        const fieldId = item.fieldId;
-        const idx = this.getItemIndex(fieldId);
+        const { idField, pidField } = this.props;
+        const id = item[idField];
+        const idx = this.getItemIndex(id);
 
-        if (item.$pid === pid) return true;
+        if (item[pidField] === pid) return true;
 
         /**
          * 局部环路检测
@@ -326,7 +345,7 @@ export default class DesignModel extends React.Component {
          */
         const pids = pid == null ? [] : this.getPids(pid);
         if (pids.length) {
-            if (pids.indexOf(fieldId) !== -1) {
+            if (pids.indexOf(id) !== -1) {
                 return false;
             }
         }
@@ -341,16 +360,16 @@ export default class DesignModel extends React.Component {
                 const lastItem = childs[childs.length - 1];
 
                 if (idx > pidIndex) {
-                    this.insertAfter(item, lastItem.fieldId);
+                    this.insertAfter(item, lastItem);
                 } else {
-                    this.insertBefore(item, firstItem.fieldId);
+                    this.insertBefore(item, firstItem);
                 }
                 return true;
             }
         }
 
         if (idx !== -1) {
-            item.$pid = pid;
+            item[pidField] = pid;
         }
 
         this.onChange(this.getAllItems());
@@ -359,16 +378,17 @@ export default class DesignModel extends React.Component {
     }
 
     commitItem(item) {
+        const { idField } = this.props;
         const items = this.getAllItems();
-        const fieldId = item.fieldId;
-        const idx = this.getItemIndex(fieldId);
+        const id = item[idField];
+        const idx = this.getItemIndex(id);
 
         if (idx !== -1 && item.__tmp__) {
             item.__tmp__ = false;
             delete item.__tmp__;
             items[idx] = item;
             // this.setState({
-            //     activeId: item.fieldId
+            //     activeId: item[idField]
             // });
             this.onChange(items);
         }
@@ -385,13 +405,14 @@ export default class DesignModel extends React.Component {
     getModel() {
         return {
             DropContainerContext: this.DropContainerContext,
+            isSameItem: this.isSameItem.bind(this),
             // getWidget: this.getWidget.bind(this),
             // getWidgets: this.getWidgets.bind(this),
             getScope: this.getScope.bind(this),
             fireEvent: this.fireEvent.bind(this),
-            setActiveId: this.setActiveId.bind(this),
-            getActiveId: this.getActiveId.bind(this),
-            getActiveItem: this.getActiveItem.bind(this),
+            // setActiveId: this.setActiveId.bind(this),
+            // getActiveId: this.getActiveId.bind(this),
+            // getActiveItem: this.getActiveItem.bind(this),
             addItem: this.addItem.bind(this),
             addTmpItem: this.addTmpItem.bind(this),
             getPids: this.getPids.bind(this),

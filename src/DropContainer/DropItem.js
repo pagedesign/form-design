@@ -37,7 +37,9 @@ class DropItem extends React.Component {
         return {
             accept: designer.getScope(),
             canDrop({ item: dragItem }, monitor) {
-                return item.fieldId !== dragItem.fieldId;
+                return designer.isTmpItem(item)
+                    ? false
+                    : !designer.isSameItem(item, dragItem);
             },
 
             hover({ item: dragItem }, monitor) {
@@ -62,10 +64,12 @@ class DropItem extends React.Component {
                     targetOffset.height / 2
                 );
 
+                console.log("insertBefore insertAfter");
+
                 if (dragOffset.y <= middleY) {
-                    designer.insertBefore(dragItem, item.fieldId);
+                    designer.insertBefore(dragItem, item);
                 } else {
-                    designer.insertAfter(dragItem, item.fieldId);
+                    designer.insertAfter(dragItem, item);
                 }
             },
 
@@ -174,11 +178,6 @@ class DropItem extends React.Component {
 
         this._connectDropTarget = connectDropTarget;
         this._connectDragTarget = connectDragTarget;
-
-        // const connectDragAndDropTarget = dom => {
-        //     connectDropTarget(dom);
-        //     connectDragTarget(dom);
-        // };
 
         const child =
             typeof children === "function"

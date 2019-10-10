@@ -66,7 +66,7 @@
     background: #efefef; }
     .csos-form-designer-container .design-panel .design-layout-container {
       width: 800px;
-      height: 600px;
+      height: 1600px;
       padding-bottom: 60px;
       margin: 0 auto;
       overflow: auto;
@@ -83,19 +83,20 @@
                 box-shadow: none;
         border: none; }
       .csos-form-designer-container .design-panel .design-layout-container .drag-item-placeholder {
-        padding-top: 12px; }
+        margin-top: 12px; }
         .csos-form-designer-container .design-panel .design-layout-container .drag-item-placeholder-inner {
           height: 46px;
           border: 1px dashed #cfd1d2; }
       .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper {
-        padding-top: 12px; }
+        margin-top: 12px; }
         .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper.dragging {
           opacity: 0.2; }
         .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item {
           position: relative;
           font-size: 14px;
           display: block;
-          margin-bottom: 1px; }
+          margin-bottom: 1px;
+          border: 1px solid #d8d8d8; }
           .csos-form-designer-container .design-panel .design-layout-container .widget-preview-item-wrapper .widget-preview-item:before {
             content: "";
             position: absolute;

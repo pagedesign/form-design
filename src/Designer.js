@@ -37,11 +37,18 @@ export default class Designer extends React.Component {
     };
 
     render() {
-        const { widgets, renderWidgetList, metadata, platform } = this.props;
+        const {
+            widgets,
+            renderWidgetList,
+            metadata,
+            platform,
+            ...resetProps
+        } = this.props;
 
         return (
             <DndProvider backend={HTML5Backend}>
                 <DesignModel
+                    {...resetProps}
                     widgets={widgets}
                     items={metadata.items}
                     platform={platform}

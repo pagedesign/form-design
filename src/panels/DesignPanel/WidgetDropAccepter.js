@@ -42,6 +42,9 @@ const spec = {
         //根节点统一commit
         if (props.pid == null) {
             designer.commitItem(dragItem.item);
+            designer.fireEvent("onDrop", {
+                item: dragItem.item
+            });
         }
     }
 };

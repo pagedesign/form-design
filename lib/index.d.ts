@@ -11,6 +11,7 @@ declare namespace FormDesignCore {
         metadata: { items: Item[] };
         widgets: Item[];
         onChange: (metadata: { items: Item[] }) => void;
+        onDrop: (event: { item: Item }) => void;
         renderWidgetList: (
             widgets: Array<{ props: { item: Item } }>
         ) => JSX.Element;

@@ -23,6 +23,7 @@ function App() {
             }}
         >
             <FormDesigner
+                onDrop={console.log}
                 widgets={widgets}
                 metadata={metadata}
                 onChange={onMetadataChange}

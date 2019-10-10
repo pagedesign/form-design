@@ -277,6 +277,15 @@ export default class DesignModel extends React.Component {
         return !!item.__tmp__;
     }
 
+    fireEvent(type, e) {
+        const props = this.props;
+        const handler = props[type];
+
+        if (handler) {
+            handler(e);
+        }
+    }
+
     getModel() {
         return {
             getWidget: this.getWidget.bind(this),
@@ -297,7 +306,8 @@ export default class DesignModel extends React.Component {
             clearTmpItems: this.clearTmpItems.bind(this),
             commitItem: this.commitItem.bind(this),
             isTmpItem: this.isTmpItem.bind(this),
-            updateItemPid: this.updateItemPid.bind(this)
+            updateItemPid: this.updateItemPid.bind(this),
+            fireEvent: this.fireEvent.bind(this)
         };
     }
 

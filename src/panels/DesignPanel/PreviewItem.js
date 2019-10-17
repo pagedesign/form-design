@@ -1,15 +1,10 @@
-import React from 'react';
-import { findDOMNode } from 'react-dom';
-import flow from 'lodash/flow';
-import {
-    DragSource,
-    DropTarget,
-} from 'react-dnd';
-import cx from 'classnames';
-import {
-    WIDGET_DRAG_DROP_SCOPE
-} from '../../constants';
-import DesignContext from '../../DesignContext';
+import React from "react";
+import { findDOMNode } from "react-dom";
+import flow from "lodash/flow";
+import { DragSource, DropTarget } from "react-dnd";
+import cx from "classnames";
+import { WIDGET_DRAG_DROP_SCOPE } from "../../constants";
+import DesignContext from "../../DesignContext";
 
 const dragSpec = {
     beginDrag(props) {
@@ -19,9 +14,9 @@ const dragSpec = {
             isWidgetDragging: false,
             isPreviewDragging: false,
             widget: widget,
-            item: item,
+            item: item
         };
-    },
+    }
     // endDrag(props, monitor, component) {
     //     console.log('endDrag')
     // }
@@ -30,9 +25,9 @@ const dragSpec = {
 const dragCollect = (connect, monitor) => {
     return {
         connectDragSource: connect.dragSource(),
-        isDragging: monitor.isDragging(),
+        isDragging: monitor.isDragging()
     };
-}
+};
 
 function canDrop(props, monitor) {
     const designer = props.designer;
@@ -69,15 +64,14 @@ const dropSpec = {
 
         //顺序调整
         const targetOffset = previewDOM.getBoundingClientRect();
-        const middleY = ~~(targetOffset.bottom - (targetOffset.height / 2));
+        const middleY = ~~(targetOffset.bottom - targetOffset.height / 2);
 
         if (dragOffset.y <= middleY) {
             designer.insertBefore(dragItem.item, item.fieldId);
         } else {
             designer.insertAfter(dragItem.item, item.fieldId);
         }
-
-    },
+    }
 
     // drop(props, monitor, component) {
     //     //TODO
@@ -88,18 +82,17 @@ const dropCollect = (connect, monitor) => {
     return {
         connectDropTarget: connect.dropTarget(),
         isOver: monitor.isOver({ shallow: true }),
-        canDrop: monitor.canDrop(),
+        canDrop: monitor.canDrop()
         // dragItem: monitor.getItem(),
-    }
-}
+    };
+};
 
 class WidgetPreviewItem extends React.Component {
-
     static contextType = DesignContext;
 
     state = {
         // placeholderPosition: 'none', //none after before top bottom
-    }
+    };
 
     handlePreviewClick(item, e) {
         if (e.isDefaultPrevented()) {
@@ -113,19 +106,15 @@ class WidgetPreviewItem extends React.Component {
     handleRemove = () => {
         const designer = this.context;
         const { item } = this.props;
-        designer.removeItem(item.fieldId)
-    }
+        designer.removeItem(item.fieldId);
+    };
 
-    handleDragAndDrop = (dom) => {
-        const {
-            connectDropTarget,
-            connectDragSource,
-        } = this.props;
+    handleDragAndDrop = dom => {
+        const { connectDropTarget, connectDragSource } = this.props;
 
         connectDropTarget(dom);
         connectDragSource(dom);
-
-    }
+    };
 
     render() {
         const {
@@ -136,7 +125,7 @@ class WidgetPreviewItem extends React.Component {
             widget,
             item,
             // dragItem,
-            visible,
+            visible
         } = this.props;
         // const { placeholderPosition } = this.state;
         const designer = this.context;
@@ -150,26 +139,30 @@ class WidgetPreviewItem extends React.Component {
                 ref={this.handleDragAndDrop}
                 className={cx({
                     "widget-preview-item-wrapper": true,
-                    "droppable": isOver,
-                    "dragging": isDragging,
+                    droppable: isOver,
+                    dragging: isDragging || designer.isTmpItem(item)
                     // "drop-tips": canDrop,
                 })}
-
                 style={{
-                    display: visible ? 'inline-block' : 'none',
-                    width: item.width || '100%'
+                    display: visible ? "inline-block" : "none",
+                    width: item.width || "100%"
                 }}
-
             >
                 <div
                     className={cx({
                         "widget-preview-item": true,
-                        "widget-preview-item-selected": activeId === item.fieldId,
+                        "widget-preview-item-selected":
+                            activeId === item.fieldId
                     })}
                     onClick={this.handlePreviewClick.bind(this, item)}
                 >
                     <widget.Preview item={item} designer={designer} />
-                    <span className="widget-preview-close" onClick={this.handleRemove}>x</span>
+                    <span
+                        className="widget-preview-close"
+                        onClick={this.handleRemove}
+                    >
+                        x
+                    </span>
                 </div>
             </div>
         );
@@ -178,5 +171,5 @@ class WidgetPreviewItem extends React.Component {
 
 export default flow(
     DropTarget(WIDGET_DRAG_DROP_SCOPE, dropSpec, dropCollect),
-    DragSource(WIDGET_DRAG_DROP_SCOPE, dragSpec, dragCollect),
-)(WidgetPreviewItem)
+    DragSource(WIDGET_DRAG_DROP_SCOPE, dragSpec, dragCollect)
+)(WidgetPreviewItem);

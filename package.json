@@ -65,7 +65,7 @@
         "postcss-preset-env": "^6.6.0",
         "sass-loader": "^7.1.0",
         "style-loader": "^0.23.1",
-        "transform-es": "^2.3.0"
+        "transform-es": "^5.6.7"
     },
     "browserslist": [
         ">0.2%",
